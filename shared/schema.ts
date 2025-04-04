@@ -8,12 +8,14 @@ export const wheelSegments = pgTable("wheel_segments", {
   text: text("text").notNull(), // Prize text
   color: text("color").notNull().default("#F59E0B"), // Background color
   position: integer("position").notNull().default(0), // Position on the wheel
+  weight: integer("weight").notNull().default(1), // Weight for probability (higher = more likely)
 });
 
 export const insertWheelSegmentSchema = createInsertSchema(wheelSegments).pick({
   text: true,
   color: true,
   position: true,
+  weight: true,
 });
 
 // Tickets (generated codes linked to prizes)
@@ -64,11 +66,13 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  isAdmin: boolean("is_admin").notNull().default(false),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
+  isAdmin: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

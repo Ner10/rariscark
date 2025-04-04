@@ -13,6 +13,9 @@ import { v4 as uuidv4 } from 'uuid';
 import session from "express-session";
 import type { Store as SessionStore } from "express-session";
 import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
+import { db, pool } from './db';
+import { eq, desc, asc } from 'drizzle-orm';
 
 export interface IStorage {
   // User operations
@@ -43,194 +46,188 @@ export interface IStorage {
   
   // Session storage
   sessionStore: SessionStore;
+  
+  // Database initialization
+  initializeDatabase?(): Promise<void>;
 }
 
-// Configure the memory store
+// Configure PostgreSQL session store
+const PostgresSessionStore = connectPg(session);
 
-const MemoryStore = createMemoryStore(session);
-
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private wheelSegments: Map<number, WheelSegment>;
-  private tickets: Map<number, Ticket>;
-  private settings: Map<string, Setting>;
-  
+// Database implementation
+export class DatabaseStorage implements IStorage {
   sessionStore: SessionStore;
   
-  private currentUserId: number;
-  private currentWheelSegmentId: number;
-  private currentTicketId: number;
-  private currentSettingId: number;
-  
   constructor() {
-    this.users = new Map();
-    this.wheelSegments = new Map();
-    this.tickets = new Map();
-    this.settings = new Map();
-    
-    // Initialize session store
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000, // Prune expired entries every 24h
+    this.sessionStore = new PostgresSessionStore({ 
+      pool, 
+      createTableIfMissing: true,
+      tableName: 'sessions'
     });
-    
-    this.currentUserId = 1;
-    this.currentWheelSegmentId = 1;
-    this.currentTicketId = 1;
-    this.currentSettingId = 1;
-    
-    // Initialize with default data
-    this.initDefaultData();
   }
   
-  // Initialize with default data for a new system
-  private async initDefaultData() {
-    // Add default admin user
-    await this.createUser({
-      username: 'admin',
-      password: 'admin123' // In a real system, this would be hashed
-    });
+  // Initialize database with default data if empty
+  async initializeDatabase(): Promise<void> {
+    console.log("Initializing database...");
     
-    // Add default wheel segments (12 segments)
-    const colors = [
-      '#F59E0B', '#10B981', '#4F46E5', '#F43F5E', '#8B5CF6', '#EC4899', 
-      '#06B6D4', '#84CC16', '#6366F1', '#F97316', '#14B8A6', '#D946EF'
-    ];
-    const prizes = [
-      '$50 Gift Card',
-      'Free Ticket',
-      '20% Off',
-      '$10 Cashback',
-      'Free Product',
-      '2x Points',
-      'Mystery Box',
-      'Try Again',
-      '$25 Gift Card',
-      'Free Coffee',
-      '$5 Discount',
-      'Free Shipping'
-    ];
+    // Check if we have any users
+    const userResult = await db.select().from(users);
+    const userCount = userResult.length;
     
-    let segments: WheelSegment[] = [];
-    
-    for (let i = 0; i < prizes.length; i++) {
-      const segment = await this.createWheelSegment({
-        text: prizes[i],
-        color: colors[i % colors.length],
-        position: i
+    if (userCount === 0) {
+      console.log("Creating default admin user and data...");
+      
+      // Create admin user - password is 'admin123'
+      await this.createUser({
+        username: 'admin',
+        password: '$2a$10$D/IX/AtaOxLSZ1sHxz9xSu6apCx1r4MxN/7YnX/qDO9BjDt.RQYpG',
+        isAdmin: true
       });
-      segments.push(segment);
+      
+      // Add default wheel segments (12 segments alternating red/white)
+      const colors = [
+        '#FF0000', '#FFFFFF', '#FF0000', '#FFFFFF', '#FF0000', '#FFFFFF',
+        '#FF0000', '#FFFFFF', '#FF0000', '#FFFFFF', '#FF0000', '#FFFFFF'
+      ];
+      
+      const prizes = [
+        '$50 Gift Card',
+        '10% Discount',
+        '$100 Gift Card',
+        'Free Shipping',
+        '$25 Gift Card',
+        'Buy 1 Get 1 Free',
+        '$75 Gift Card',
+        '15% Discount',
+        '$30 Gift Card',
+        'Free Product',
+        '$10 Gift Card',
+        '5% Discount'
+      ];
+      
+      let segments: WheelSegment[] = [];
+      
+      for (let i = 0; i < prizes.length; i++) {
+        const segment = await this.createWheelSegment({
+          text: prizes[i],
+          color: colors[i],
+          position: i,
+          weight: 1
+        });
+        segments.push(segment);
+      }
+      
+      // Create sample tickets for demonstration
+      const sampleTickets = [
+        { code: 'PRIZE-2025-ABC123', segmentId: segments[0].id },
+        { code: 'PRIZE-2025-DEF456', segmentId: segments[1].id },
+        { code: 'PRIZE-2025-GHI789', segmentId: segments[2].id },
+        { code: 'TEST-TICKET', segmentId: segments[3].id }
+      ];
+      
+      for (const ticket of sampleTickets) {
+        await this.createTicket(ticket);
+      }
+      
+      // Add default settings
+      await this.updateSetting('background_color', 'linear-gradient(to bottom, #1a0000 0%, #3a0000 100%)');
+      await this.updateSetting('wheel_title', 'Raris Çark');
+      await this.updateSetting('meta_description', 'Çarkı çevir ve ödülünü kazan!');
+      
+      console.log("Database initialization complete!");
     }
-    
-    // Create some sample tickets for demonstration
-    const sampleTickets = [
-      { code: 'PRIZE-2025-ABC123', segmentId: segments[0].id }, // $50 Gift Card
-      { code: 'PRIZE-2025-DEF456', segmentId: segments[2].id }, // 20% Off
-      { code: 'PRIZE-2025-GHI789', segmentId: segments[4].id }, // Free Product
-      { code: 'PRIZE-2025-JKL012', segmentId: segments[6].id }, // Mystery Box
-      { code: 'PRIZE-2025-MNO345', segmentId: segments[8].id }, // $25 Gift Card
-      { code: 'TEST-TICKET', segmentId: segments[10].id }, // $5 Discount
-    ];
-    
-    for (const ticket of sampleTickets) {
-      await this.createTicket(ticket);
-    }
-    
-    // Add default settings
-    await this.updateSetting('background_color', 'linear-gradient(to bottom, #4338CA, #3730A3)');
-    await this.updateSetting('site_title', 'Prize Wheel Game');
-    await this.updateSetting('meta_description', 'Spin the wheel and win exciting prizes!');
   }
   
   // User operations
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
   
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
   
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
   
   async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-    
-    const updatedUser = { ...user, ...userData };
-    this.users.set(id, updatedUser);
+    const [updatedUser] = await db
+      .update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
     return updatedUser;
   }
   
   // Wheel segment operations
   async getWheelSegments(): Promise<WheelSegment[]> {
-    return Array.from(this.wheelSegments.values())
-      .sort((a, b) => a.position - b.position);
+    return await db.select().from(wheelSegments).orderBy(asc(wheelSegments.position));
   }
   
   async getWheelSegment(id: number): Promise<WheelSegment | undefined> {
-    return this.wheelSegments.get(id);
+    const [segment] = await db.select().from(wheelSegments).where(eq(wheelSegments.id, id));
+    return segment;
   }
   
   async createWheelSegment(segment: InsertWheelSegment): Promise<WheelSegment> {
-    const id = this.currentWheelSegmentId++;
-    // Ensure all required properties are set
-    const newSegment: WheelSegment = { 
-      id, 
+    if (segment.position === undefined) {
+      const result = await db.select().from(wheelSegments);
+      segment.position = result.length;
+    }
+    
+    const [newSegment] = await db.insert(wheelSegments).values({
       text: segment.text,
-      color: segment.color || "#F59E0B", // Provide a default if not supplied 
-      position: segment.position || 0     // Provide a default if not supplied
-    };
-    this.wheelSegments.set(id, newSegment);
+      color: segment.color || "#FF0000",
+      position: segment.position,
+      weight: segment.weight || 1
+    }).returning();
+    
     return newSegment;
   }
   
   async updateWheelSegment(id: number, segmentUpdate: Partial<InsertWheelSegment>): Promise<WheelSegment | undefined> {
-    const segment = this.wheelSegments.get(id);
-    if (!segment) return undefined;
-    
-    const updatedSegment = { ...segment, ...segmentUpdate };
-    this.wheelSegments.set(id, updatedSegment);
+    const [updatedSegment] = await db
+      .update(wheelSegments)
+      .set(segmentUpdate)
+      .where(eq(wheelSegments.id, id))
+      .returning();
     return updatedSegment;
   }
   
   async deleteWheelSegment(id: number): Promise<boolean> {
-    return this.wheelSegments.delete(id);
+    try {
+      const result = await db.delete(wheelSegments).where(eq(wheelSegments.id, id));
+      return true;
+    } catch (err) {
+      console.error("Error deleting wheel segment:", err);
+      return false;
+    }
   }
   
   // Ticket operations
   async getTickets(): Promise<Ticket[]> {
-    return Array.from(this.tickets.values())
-      .sort((a, b) => {
-        const aDate = a.createdAt as Date;
-        const bDate = b.createdAt as Date;
-        return bDate.getTime() - aDate.getTime();
-      });
+    return await db.select().from(tickets).orderBy(desc(tickets.createdAt));
   }
   
   async getTicket(id: number): Promise<Ticket | undefined> {
-    return this.tickets.get(id);
+    const [ticket] = await db.select().from(tickets).where(eq(tickets.id, id));
+    return ticket;
   }
   
   async getTicketByCode(code: string): Promise<Ticket | undefined> {
-    return Array.from(this.tickets.values()).find(
-      (ticket) => ticket.code === code
-    );
+    const [ticket] = await db.select().from(tickets).where(eq(tickets.code, code));
+    return ticket;
   }
   
   async createTicket(ticketData: Partial<InsertTicket>): Promise<Ticket> {
-    const id = this.currentTicketId++;
     // Generate a ticket code if not provided
     const code = ticketData.code || `PRIZE-${new Date().getFullYear()}-${uuidv4().substring(0, 6).toUpperCase()}`;
     
-    const ticket: Ticket = {
-      id,
+    const [ticket] = await db.insert(tickets).values({
       code,
       segmentId: ticketData.segmentId!,
       used: false,
@@ -238,62 +235,69 @@ export class MemStorage implements IStorage {
       ipAddress: null,
       usedAt: null,
       expiresAt: ticketData.expiresAt || null
-    };
+    }).returning();
     
-    this.tickets.set(id, ticket);
     return ticket;
   }
   
   async updateTicket(id: number, ticketUpdate: Partial<InsertTicket>): Promise<Ticket | undefined> {
-    const ticket = this.tickets.get(id);
-    if (!ticket) return undefined;
-    
-    const updatedTicket = { ...ticket, ...ticketUpdate };
-    this.tickets.set(id, updatedTicket);
+    const [updatedTicket] = await db
+      .update(tickets)
+      .set(ticketUpdate)
+      .where(eq(tickets.id, id))
+      .returning();
     return updatedTicket;
   }
   
   async getWinnersListWithPrizes(): Promise<any[]> {
-    const usedTickets = Array.from(this.tickets.values())
-      .filter(ticket => ticket.used)
-      .sort((a, b) => {
-        const aDate = a.usedAt as Date;
-        const bDate = b.usedAt as Date;
-        return bDate.getTime() - aDate.getTime();
-      });
+    const winners = await db
+      .select({
+        id: tickets.id,
+        code: tickets.code,
+        segmentId: tickets.segmentId,
+        createdAt: tickets.createdAt,
+        used: tickets.used,
+        usedAt: tickets.usedAt,
+        ipAddress: tickets.ipAddress,
+        prize: wheelSegments.text
+      })
+      .from(tickets)
+      .innerJoin(wheelSegments, eq(tickets.segmentId, wheelSegments.id))
+      .where(eq(tickets.used, true))
+      .orderBy(desc(tickets.usedAt));
     
-    return Promise.all(usedTickets.map(async (ticket) => {
-      const segment = await this.getWheelSegment(ticket.segmentId);
-      return {
-        ...ticket,
-        prize: segment ? segment.text : 'Unknown Prize'
-      };
-    }));
+    return winners;
   }
   
   // Settings operations
   async getSettings(): Promise<Setting[]> {
-    return Array.from(this.settings.values());
+    return await db.select().from(settings);
   }
   
   async getSetting(key: string): Promise<Setting | undefined> {
-    return this.settings.get(key);
+    const [setting] = await db.select().from(settings).where(eq(settings.key, key));
+    return setting;
   }
   
   async updateSetting(key: string, value: string): Promise<Setting> {
-    const existingSetting = this.settings.get(key);
+    const existingSetting = await this.getSetting(key);
     
     if (existingSetting) {
-      const updatedSetting = { ...existingSetting, value };
-      this.settings.set(key, updatedSetting);
+      const [updatedSetting] = await db
+        .update(settings)
+        .set({ value })
+        .where(eq(settings.key, key))
+        .returning();
       return updatedSetting;
     } else {
-      const id = this.currentSettingId++;
-      const newSetting: Setting = { id, key, value };
-      this.settings.set(key, newSetting);
+      const [newSetting] = await db
+        .insert(settings)
+        .values({ key, value })
+        .returning();
       return newSetting;
     }
   }
 }
 
-export const storage = new MemStorage();
+// Export DatabaseStorage instance
+export const storage = new DatabaseStorage();
