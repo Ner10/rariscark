@@ -2,7 +2,7 @@ import React from 'react';
 
 const WheelPointer: React.FC = () => {
   return (
-    <div className="wheel-pointer absolute -top-8 left-1/2 -translate-x-1/2 w-14 h-20 z-20">
+    <div className="wheel-pointer absolute -top-10 left-1/2 -translate-x-1/2 w-14 h-20 z-20">
       {/* Golden triangle pointer with glowing effect - rotated to point inward */}
       <div className="w-full h-full rotate-180">
         <svg width="100%" height="100%" viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -12,7 +12,7 @@ const WheelPointer: React.FC = () => {
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
           
-          {/* Triangle shape - enlarged and pointing inward */}
+          {/* Triangle shape - enlarged and pointing inward, perfectly centered */}
           <path 
             d="M20 0 L40 30 L0 30 Z" 
             fill="url(#pointerGradient)"

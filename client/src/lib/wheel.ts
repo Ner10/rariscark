@@ -13,12 +13,14 @@ export function calculateWinningRotation(
   additionalSpins = 1 // Reduced to only 1 full rotation
 ): number {
   const segmentAngle = 360 / totalSegments;
-  const segmentRotation = segmentPosition * segmentAngle;
   
-  // To have the segment at the top (winner position), we need to rotate
-  // the wheel so that the segment is at 270 degrees (bottom becomes top)
-  // We add one full rotation for animation effect
-  const baseRotation = 270 - segmentRotation;
+  // Calculate the rotation needed to align the center of the segment with the pointer
+  // This is the key change - we need to rotate to the center of the segment, not its edge
+  const segmentMidpoint = segmentPosition * segmentAngle + (segmentAngle / 2);
+  
+  // For the pointer at the top (12 o'clock position), we want the segment to be at the bottom (6 o'clock)
+  // This means the segment center should be at 270 degrees (bottom of wheel)
+  const baseRotation = 270 - segmentMidpoint;
   
   // Normalize to positive angle and add additional spins
   const normalizedRotation = (baseRotation + 360) % 360;
