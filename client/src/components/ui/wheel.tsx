@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { WheelSegment } from '@shared/schema';
 import { calculateWinningRotation } from '@/lib/wheel';
-import { playSpinSound, stopSpinSound, playWinSound } from '@/lib/sounds';
+import { playSpinSound, stopSpinSound, playWinSound, adjustSpinSoundRate } from '@/lib/sounds';
 import WheelPointer from '../wheel-pointer';
 
 interface WheelProps {
@@ -40,7 +40,7 @@ const Wheel: React.FC<WheelProps> = ({
       if (targetSegment) {
         setSpinning(true);
         
-        // Play the spinning sound
+        // Play the spinning sound - ratchet clicking effect
         playSpinSound();
         
         // Calculate the winning rotation with just one full rotation
@@ -53,12 +53,25 @@ const Wheel: React.FC<WheelProps> = ({
         // Set the rotation
         setRotation(winRotation);
         
+        // Animation duration is 7 seconds (matches CSS duration-5000 class)
+        const spinDuration = 7000;
+        
+        // Decelerate the spinning sound near the end to simulate wheel slowing down
+        setTimeout(() => {
+          // Slow down the spinning sound in the last 2 seconds
+          adjustSpinSoundRate(0.7);
+        }, spinDuration - 2000);
+        
         // Call onSpinEnd when animation completes
         setTimeout(() => {
           setSpinning(false);
-          // Stop the spinning sound and play the win sound
+          // Stop the spinning sound and play the celebratory win sound
           stopSpinSound();
-          playWinSound();
+          
+          // Short delay before playing win sound to create better timing
+          setTimeout(() => {
+            playWinSound();
+          }, 300);
           
           // Wait 3 seconds before showing the prize popup (as requested)
           setTimeout(() => {
@@ -67,7 +80,7 @@ const Wheel: React.FC<WheelProps> = ({
             }
           }, 3000);
           
-        }, 7000); // Match the CSS transition duration
+        }, spinDuration); // Match the CSS transition duration
       }
     }
   }, [isSpinning, targetSegmentId, segments, onSpinEnd]);

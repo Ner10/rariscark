@@ -1,15 +1,17 @@
 import { Howl } from 'howler';
 
 // Create Howl instances for our sounds using publicly available sounds
-// Using a shorter spinning sound that will loop during wheel rotation
-const spinSound = new Howl({
-  src: ['https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3'],
-  volume: 0.4,
-  loop: true
+// Using a realistic, short spinning sound for the wheel
+const wheelSpinSound = new Howl({
+  src: ['https://assets.mixkit.co/active_storage/sfx/2022/2022-preview.mp3'], // Ratchet mechanical click sound
+  volume: 0.5,
+  loop: true,
+  rate: 1.2 // Slightly faster to sound more like a spinning wheel
 });
 
+// Using a cheerful, celebratory sound for winning
 const winSound = new Howl({
-  src: ['https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3'],
+  src: ['https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3'], // Winning game sound with bells
   volume: 0.7
 });
 
@@ -20,12 +22,18 @@ const clickSound = new Howl({
 
 // Sound utility functions
 export const playSpinSound = () => {
-  spinSound.stop(); // Make sure it's not already playing
-  spinSound.play();
+  wheelSpinSound.stop(); // Make sure it's not already playing
+  wheelSpinSound.rate(1.2); // Reset to default rate
+  wheelSpinSound.play();
 };
 
 export const stopSpinSound = () => {
-  spinSound.stop();
+  wheelSpinSound.stop();
+};
+
+// Adjust spin sound rate - for slowing down effect
+export const adjustSpinSoundRate = (rate: number) => {
+  wheelSpinSound.rate(rate);
 };
 
 export const playWinSound = () => {
