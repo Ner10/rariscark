@@ -58,7 +58,7 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Kazananlar Listesi</h2>
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-hidden text-gray-800">
         <div className="p-4 border-b flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center space-x-2 w-full sm:w-auto">
             <Input

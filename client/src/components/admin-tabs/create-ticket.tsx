@@ -97,7 +97,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Bilet Oluştur</h2>
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow p-6 text-gray-800">
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-1">Ödül Seçin</label>
           <Select 

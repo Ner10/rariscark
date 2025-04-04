@@ -144,7 +144,7 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Çark Tasarımını Düzenle</h2>
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow p-6 text-gray-800">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Preview Section */}
           <div className="flex-1 flex flex-col items-center">
