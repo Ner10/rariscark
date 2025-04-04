@@ -159,7 +159,7 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
               <Button 
                 onClick={() => addSegmentMutation.mutate()}
                 disabled={addSegmentMutation.isPending}
-                className="bg-indigo-600 hover:bg-indigo-700"
+                className="bg-[#800000] hover:bg-[#600000]"
               >
                 <i className="fas fa-plus mr-2"></i> Dilim Ekle
               </Button>
@@ -181,7 +181,7 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
                   </div>
                   <div className="flex space-x-2">
                     <button 
-                      className="text-gray-600 hover:text-indigo-600"
+                      className="text-gray-600 hover:text-[#800000]"
                       onClick={() => handleEditSegment(segment)}
                     >
                       <i className="fas fa-edit"></i>
@@ -246,7 +246,7 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
             <Button 
               onClick={handleSaveSegment}
               disabled={updateSegmentMutation.isPending}
-              className="bg-indigo-600 hover:bg-indigo-700"
+              className="bg-[#800000] hover:bg-[#600000]"
             >
               Değişiklikleri Kaydet
             </Button>

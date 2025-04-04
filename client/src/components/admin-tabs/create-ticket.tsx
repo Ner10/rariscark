@@ -129,7 +129,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
         <Button 
           onClick={handleGenerateTickets} 
           disabled={generateTicketsMutation.isPending || !selectedSegmentId}
-          className="bg-indigo-600 hover:bg-indigo-700"
+          className="bg-[#800000] hover:bg-[#600000]"
         >
           Bilet Oluştur
         </Button>

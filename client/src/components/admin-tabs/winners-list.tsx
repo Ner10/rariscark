@@ -68,7 +68,7 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full"
             />
-            <Button className="bg-indigo-600 hover:bg-indigo-700 px-3 shrink-0">
+            <Button className="bg-[#800000] hover:bg-[#600000] px-3 shrink-0">
               <i className="fas fa-search"></i>
             </Button>
           </div>
@@ -104,7 +104,7 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
                 <TableRow>
                   <TableCell colSpan={4} className="text-center py-8">
                     <div className="flex justify-center">
-                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#800000]"></div>
                     </div>
                   </TableCell>
                 </TableRow>
