@@ -23,18 +23,25 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
   // Alternate between white and red backgrounds exactly as in the reference image
   const isWhiteSegment = index % 2 === 0;
   
+  // Define segment background colors with high contrast
+  const whiteSegmentColor = '#FFFAF0'; // Off-white
+  const redSegmentColor = '#D20000';   // Bright red
+  
   // Style that will match the reference image
   const segmentStyle = {
     transform: `rotate(${rotation}deg)`,
     clipPath: `polygon(100% 0%, 100% 100%, 0% 0%)`,
-    background: isWhiteSegment ? '#FFFAF0' : '#D20000', // Slightly adjusted colors for better contrast
+    background: isWhiteSegment ? whiteSegmentColor : redSegmentColor,
     borderRight: '1px solid #DAA520',
     borderTop: '1px solid #DAA520',
   };
   
-  // Use red text for white segments and white text for red segments
-  // Using a slightly darker red for better readability on white background
-  const textColor = isWhiteSegment ? '#990000' : '#FFFFFF';
+  // Calculate exact opposite/complementary colors for maximum contrast
+  // For red segment (D20000), the opposite is cyan-ish (#2DFFFF)
+  // For white segment (FFFAF0), the opposite is dark blue-purple (#000510)
+  const textColor = isWhiteSegment 
+    ? '#000000'     // Pure black text on off-white background
+    : '#FFFFFF';    // Pure white text on red background
   
   // Calculate position adjustments for vertical text based on number of segments
   let radialPosition = '40%';  // Default radial position along the segment
@@ -71,14 +78,39 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
       className="wheel-segment absolute w-1/2 h-1/2 top-0 left-0 origin-bottom-right flex items-start justify-center overflow-hidden"
       style={segmentStyle}
     >
-      {/* Add subtle gradient effect */}
+      {/* Add enhanced gradient effect for better segment visibility */}
       <div 
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0"
         style={{
           background: isWhiteSegment 
-            ? 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)' 
-            : 'linear-gradient(135deg, rgba(184,0,0,0) 0%, rgba(120,0,0,1) 100%)',
+            ? 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,250,230,0.8) 100%)' 
+            : 'linear-gradient(135deg, rgba(210,0,0,0.8) 0%, rgba(120,0,0,1) 100%)',
           clipPath: `polygon(100% 0%, 100% 100%, 0% 0%)`,
+          opacity: 0.3,
+        }}
+      ></div>
+      
+      {/* Add highlight edges for better segment definition */}
+      <div 
+        className="absolute"
+        style={{
+          top: 0,
+          right: 0,
+          width: '2px',
+          height: '100%',
+          background: '#FFD700', // Gold trim
+          opacity: 0.8,
+        }}
+      ></div>
+      <div 
+        className="absolute"
+        style={{
+          top: 0,
+          right: 0,
+          width: '100%',
+          height: '2px',
+          background: '#FFD700', // Gold trim
+          opacity: 0.8,
         }}
       ></div>
       
@@ -106,7 +138,10 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
             fontSize: fontSizeValue,
             fontWeight: 'bold',
             lineHeight: '1',
-            textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
+            // Add shadow effects for better contrast and readability
+            textShadow: isWhiteSegment 
+              ? '0.5px 0.5px 0 #333, -0.5px -0.5px 0 #333, 0.5px -0.5px 0 #333, -0.5px 0.5px 0 #333' 
+              : '0px 0px 5px rgba(255,255,255,0.5), 0px 0px 7px rgba(255,255,255,0.3)',
             fontFamily: "'Arial', sans-serif",
             padding: '2px',
             textAlign: 'center',
