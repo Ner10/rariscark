@@ -92,16 +92,16 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Tarih</TableHead>
-                <TableHead>Bilet Kodu</TableHead>
-                <TableHead>Ödül</TableHead>
-                <TableHead>IP Adresi</TableHead>
+              <TableRow className="bg-gray-50">
+                <TableHead className="text-gray-800">Tarih</TableHead>
+                <TableHead className="text-gray-800">Bilet Kodu</TableHead>
+                <TableHead className="text-gray-800">Ödül</TableHead>
+                <TableHead className="text-gray-800">IP Adresi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                <TableRow>
+                <TableRow className="bg-white">
                   <TableCell colSpan={4} className="text-center py-8">
                     <div className="flex justify-center">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#800000]"></div>
@@ -110,17 +110,17 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
                 </TableRow>
               ) : filteredWinners.length > 0 ? (
                 filteredWinners.map((winner) => (
-                  <TableRow key={winner.id}>
-                    <TableCell>
+                  <TableRow key={winner.id} className="bg-white">
+                    <TableCell className="text-gray-800">
                       {winner.usedAt ? format(new Date(winner.usedAt), 'MMM d, yyyy HH:mm') : 'N/A'}
                     </TableCell>
-                    <TableCell className="font-medium">{winner.code}</TableCell>
-                    <TableCell>{winner.prize}</TableCell>
+                    <TableCell className="font-medium text-gray-900">{winner.code}</TableCell>
+                    <TableCell className="text-gray-800">{winner.prize}</TableCell>
                     <TableCell className="text-gray-500">{winner.ipAddress || 'Bilinmiyor'}</TableCell>
                   </TableRow>
                 ))
               ) : (
-                <TableRow>
+                <TableRow className="bg-white">
                   <TableCell colSpan={4} className="text-center py-8 text-gray-500">
                     {search || prizeFilter !== 'all' 
                       ? 'Filtrelere uygun kazanan bulunamadı' 

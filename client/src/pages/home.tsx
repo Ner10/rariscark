@@ -116,7 +116,7 @@ const Home: React.FC = () => {
                   value={ticketCode}
                   onChange={(e) => setTicketCode(e.target.value)}
                   placeholder="RARIS-2025-XXXX"
-                  className="flex-1 rounded-l-lg text-white bg-black/30 border-[#800000]/30"
+                  className="flex-1 rounded-l-lg text-white bg-white/10 border-white/30"
                   disabled={codeValidated || isSpinning}
                 />
                 <Button

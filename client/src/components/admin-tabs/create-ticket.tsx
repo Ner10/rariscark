@@ -178,7 +178,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
                 {recentTickets.map((ticket) => {
                   const segment = segments.find(s => s.id === ticket.segmentId);
                   return (
-                    <TableRow key={ticket.id} className="border-b">
+                    <TableRow key={ticket.id} className="border-b bg-white">
                       <TableCell className="font-medium text-gray-900">{ticket.code}</TableCell>
                       <TableCell className="text-gray-800">{segment?.text || 'Bilinmeyen'}</TableCell>
                       <TableCell className="text-gray-800">{format(new Date(ticket.createdAt), 'MMM d, yyyy')}</TableCell>
@@ -198,7 +198,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
                 })}
                 
                 {recentTickets.length === 0 && (
-                  <TableRow>
+                  <TableRow className="bg-white">
                     <TableCell colSpan={4} className="text-center py-4 text-gray-500">
                       Henüz bilet oluşturulmadı
                     </TableCell>
