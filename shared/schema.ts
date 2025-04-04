@@ -32,13 +32,16 @@ export const insertTicketSchema = createInsertSchema(tickets).pick({
   code: true,
   segmentId: true,
   expiresAt: true,
+  used: true,
+  usedAt: true,
+  ipAddress: true,
 });
 
 // Settings (for wheel background, meta tags, etc.)
 export const settings = pgTable("settings", {
   id: serial("id").primaryKey(),
   key: text("key").notNull().unique(),
-  value: text("value"),
+  value: text("value").notNull().default(""),
 });
 
 export const insertSettingSchema = createInsertSchema(settings).pick({

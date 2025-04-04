@@ -1,17 +1,28 @@
-import type { Express, Request, Response } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth } from "./auth";
 import { z } from "zod";
 import { insertWheelSegmentSchema, insertTicketSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Set up authentication
+  setupAuth(app);
+  
+  // Auth middleware for admin routes
+  const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    next();
+  };
   // Wheel Segments API
   app.get("/api/wheel/segments", async (req: Request, res: Response) => {
     const segments = await storage.getWheelSegments();
     res.json(segments);
   });
   
-  app.post("/api/wheel/segments", async (req: Request, res: Response) => {
+  app.post("/api/wheel/segments", requireAuth, async (req: Request, res: Response) => {
     try {
       const segmentData = insertWheelSegmentSchema.parse(req.body);
       const segment = await storage.createWheelSegment(segmentData);
@@ -21,7 +32,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.put("/api/wheel/segments/:id", async (req: Request, res: Response) => {
+  app.put("/api/wheel/segments/:id", requireAuth, async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const segmentData = insertWheelSegmentSchema.partial().parse(req.body);
@@ -37,7 +48,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.delete("/api/wheel/segments/:id", async (req: Request, res: Response) => {
+  app.delete("/api/wheel/segments/:id", requireAuth, async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const success = await storage.deleteWheelSegment(id);
@@ -53,12 +64,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Tickets API
-  app.get("/api/tickets", async (req: Request, res: Response) => {
+  app.get("/api/tickets", requireAuth, async (req: Request, res: Response) => {
     const tickets = await storage.getTickets();
     res.json(tickets);
   });
   
-  app.post("/api/tickets", async (req: Request, res: Response) => {
+  app.post("/api/tickets", requireAuth, async (req: Request, res: Response) => {
     try {
       const ticketData = insertTicketSchema.partial().parse(req.body);
       
@@ -75,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/tickets/batch", async (req: Request, res: Response) => {
+  app.post("/api/tickets/batch", requireAuth, async (req: Request, res: Response) => {
     try {
       const schema = z.object({
         segmentId: z.number(),
@@ -106,7 +117,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.get("/api/tickets/winners", async (req: Request, res: Response) => {
+  app.get("/api/tickets/winners", requireAuth, async (req: Request, res: Response) => {
     const winners = await storage.getWinnersListWithPrizes();
     res.json(winners);
   });
@@ -139,12 +150,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ message: "Prize not found" });
       }
       
-      // Mark ticket as used
+      // Mark ticket as used (typescript error workaround by casting)
       await storage.updateTicket(ticket.id, {
         used: true,
         usedAt: new Date(),
         ipAddress: req.ip || req.socket.remoteAddress || "unknown"
-      });
+      } as any);
       
       // Return the winning segment and its position in the wheel
       res.json({
@@ -163,14 +174,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     // Convert array to object for easier consumption
     const settingsObj = settings.reduce((acc, setting) => {
-      acc[setting.key] = setting.value;
+      acc[setting.key] = setting.value ?? '';
       return acc;
     }, {} as Record<string, string>);
     
     res.json(settingsObj);
   });
   
-  app.put("/api/settings/:key", async (req: Request, res: Response) => {
+  app.put("/api/settings/:key", requireAuth, async (req: Request, res: Response) => {
     try {
       const key = req.params.key;
       const schema = z.object({
@@ -186,27 +197,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Simple admin auth check for demo purposes
-  // In a real app, you'd use proper authentication middleware
-  app.post("/api/auth/login", async (req: Request, res: Response) => {
-    try {
-      const schema = z.object({
-        username: z.string(),
-        password: z.string()
-      });
-      
-      const { username, password } = schema.parse(req.body);
-      const user = await storage.getUserByUsername(username);
-      
-      if (!user || user.password !== password) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-      
-      res.json({ success: true, user: { id: user.id, username: user.username } });
-    } catch (error) {
-      res.status(400).json({ message: "Invalid login data" });
-    }
-  });
+  // Authentication routes are now handled by setupAuth
   
   // Create HTTP server
   const httpServer = createServer(app);

@@ -9,11 +9,16 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 // Interface for all storage operations
+// Import the required modules
+import session from "express-session";
+import type { Store as SessionStore } from "express-session";
+
 export interface IStorage {
   // User operations
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, user: Partial<InsertUser>): Promise<User | undefined>;
   
   // Wheel segment operations
   getWheelSegments(): Promise<WheelSegment[]>;
@@ -34,13 +39,23 @@ export interface IStorage {
   getSettings(): Promise<Setting[]>;
   getSetting(key: string): Promise<Setting | undefined>;
   updateSetting(key: string, value: string): Promise<Setting>;
+  
+  // Session storage
+  sessionStore: SessionStore;
 }
+
+// Import the memory store
+import createMemoryStore from "memorystore";
+
+const MemoryStore = createMemoryStore(session);
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private wheelSegments: Map<number, WheelSegment>;
   private tickets: Map<number, Ticket>;
   private settings: Map<string, Setting>;
+  
+  sessionStore: SessionStore;
   
   private currentUserId: number;
   private currentWheelSegmentId: number;
@@ -52,6 +67,11 @@ export class MemStorage implements IStorage {
     this.wheelSegments = new Map();
     this.tickets = new Map();
     this.settings = new Map();
+    
+    // Initialize session store
+    this.sessionStore = new MemoryStore({
+      checkPeriod: 86400000, // Prune expired entries every 24h
+    });
     
     this.currentUserId = 1;
     this.currentWheelSegmentId = 1;
@@ -120,6 +140,15 @@ export class MemStorage implements IStorage {
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+  
+  async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    
+    const updatedUser = { ...user, ...userData };
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
   
   // Wheel segment operations
