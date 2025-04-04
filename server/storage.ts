@@ -70,8 +70,11 @@ export class MemStorage implements IStorage {
       password: 'admin123' // In a real system, this would be hashed
     });
     
-    // Add default wheel segments
-    const colors = ['#F59E0B', '#10B981', '#4F46E5', '#F43F5E', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+    // Add default wheel segments (12 segments)
+    const colors = [
+      '#F59E0B', '#10B981', '#4F46E5', '#F43F5E', '#8B5CF6', '#EC4899', 
+      '#06B6D4', '#84CC16', '#6366F1', '#F97316', '#14B8A6', '#D946EF'
+    ];
     const prizes = [
       '$50 Gift Card',
       'Free Ticket',
@@ -80,7 +83,11 @@ export class MemStorage implements IStorage {
       'Free Product',
       '2x Points',
       'Mystery Box',
-      'Try Again'
+      'Try Again',
+      '$25 Gift Card',
+      'Free Coffee',
+      '$5 Discount',
+      'Free Shipping'
     ];
     
     for (let i = 0; i < prizes.length; i++) {
@@ -127,7 +134,13 @@ export class MemStorage implements IStorage {
   
   async createWheelSegment(segment: InsertWheelSegment): Promise<WheelSegment> {
     const id = this.currentWheelSegmentId++;
-    const newSegment: WheelSegment = { ...segment, id };
+    // Ensure all required properties are set
+    const newSegment: WheelSegment = { 
+      id, 
+      text: segment.text,
+      color: segment.color || "#F59E0B", // Provide a default if not supplied 
+      position: segment.position || 0     // Provide a default if not supplied
+    };
     this.wheelSegments.set(id, newSegment);
     return newSegment;
   }
