@@ -119,9 +119,9 @@ export class DatabaseStorage implements IStorage {
       
       // Create sample tickets for demonstration
       const sampleTickets = [
-        { code: 'PRIZE-2025-ABC123', segmentId: segments[0].id },
-        { code: 'PRIZE-2025-DEF456', segmentId: segments[1].id },
-        { code: 'PRIZE-2025-GHI789', segmentId: segments[2].id },
+        { code: 'RARIS-2025-ABC123', segmentId: segments[0].id },
+        { code: 'RARIS-2025-DEF456', segmentId: segments[1].id },
+        { code: 'RARIS-2025-GHI789', segmentId: segments[2].id },
         { code: 'TEST-TICKET', segmentId: segments[3].id }
       ];
       
@@ -225,7 +225,7 @@ export class DatabaseStorage implements IStorage {
   
   async createTicket(ticketData: Partial<InsertTicket>): Promise<Ticket> {
     // Generate a ticket code if not provided
-    const code = ticketData.code || `PRIZE-${new Date().getFullYear()}-${uuidv4().substring(0, 6).toUpperCase()}`;
+    const code = ticketData.code || `RARIS-${new Date().getFullYear()}-${uuidv4().substring(0, 6).toUpperCase()}`;
     
     const [ticket] = await db.insert(tickets).values({
       code,

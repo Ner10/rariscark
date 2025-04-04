@@ -115,7 +115,7 @@ const Home: React.FC = () => {
                   type="text"
                   value={ticketCode}
                   onChange={(e) => setTicketCode(e.target.value)}
-                  placeholder="PRIZE-2025-XXXX"
+                  placeholder="RARIS-2025-XXXX"
                   className="flex-1 rounded-l-lg text-white bg-black/30 border-[#800000]/30"
                   disabled={codeValidated || isSpinning}
                 />
