@@ -178,14 +178,16 @@ const Wheel: React.FC<WheelProps> = ({
                     <div 
                       style={{
                         position: 'absolute',
-                        width: '90px',
+                        width: '100px',
                         textAlign: 'center',
-                        left: segments.length <= 12 ? '30px' : '25px',
-                        top: '-8px',
+                        // Adjust distance from center based on segment size - matching reference image
+                        left: '60px', 
+                        top: '-12px',
                         transform: 'rotate(90deg)',
                         color: textColor,
                         fontWeight: 'bold',
-                        fontSize: segments.length <= 8 ? '16px' : '14px',
+                        fontSize: '16px',
+                        letterSpacing: '0.5px',
                         lineHeight: '1.1',
                         textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
                         fontFamily: "'Arial', sans-serif"

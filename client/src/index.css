@@ -9,7 +9,11 @@
 
   body {
     @apply font-sans antialiased text-foreground;
-    background: radial-gradient(circle, #640819 0%, #3A0210 100%);
+    /* Golden radial background with rays to match reference image */
+    background: 
+      radial-gradient(circle at center, rgba(253, 226, 147, 0.8) 0%, rgba(214, 175, 54, 0.4) 50%, rgba(161, 120, 0, 0.3) 100%),
+      repeating-conic-gradient(from 0deg, rgba(255, 215, 0, 0.15) 0deg, rgba(255, 215, 0, 0.07) 5deg, rgba(255, 215, 0, 0.05) 15deg);
+    background-color: #B8860B;
   }
 }
 
@@ -18,11 +22,25 @@
   .bg-gradient-radial {
     background-image: radial-gradient(var(--tw-gradient-from), var(--tw-gradient-to));
   }
+  
+  /* Gold spark effect for wheel prize celebration */
+  .gold-sparkle {
+    background-image: 
+      radial-gradient(circle at center, rgba(255, 215, 0, 0.9) 0%, rgba(255, 215, 0, 0) 70%),
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 60%);
+  }
 }
 
 /* Wheel Animation Styles */
 .wheel {
   transition: transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+/* Custom transition for the wheel spinning */
+.transition-transform.duration-5000 {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  transition-duration: 5000ms;
 }
 
 .wheel-container {
