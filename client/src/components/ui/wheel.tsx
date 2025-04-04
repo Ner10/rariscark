@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { WheelSegment } from '@shared/schema';
-import { calculateSegmentRotation, calculateWinningRotation } from '@/lib/wheel';
+import { calculateWinningRotation } from '@/lib/wheel';
 import { playSpinSound } from '@/lib/confetti';
-import WheelSegmentComponent from '../wheel-segment';
 import WheelPointer from '../wheel-pointer';
 
 interface WheelProps {
@@ -110,7 +109,8 @@ const Wheel: React.FC<WheelProps> = ({
           className="absolute inset-8 rounded-full overflow-hidden transition-transform duration-5000 ease-out"
           style={{ 
             transform: `rotate(${rotation}deg)`,
-            boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.4)'
+            boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.4)',
+            background: '#FFFFFF' // Set a base background
           }}
         >
           {/* Center golden dot */}
@@ -121,16 +121,83 @@ const Wheel: React.FC<WheelProps> = ({
             }}
           ></div>
           
-          {/* Segments */}
-          {segments.map((segment, index) => (
-            <WheelSegmentComponent
-              key={segment.id}
-              segment={segment}
-              rotation={calculateSegmentRotation(segment.position, segments.length)}
-              totalSegments={segments.length}
-              index={index}
-            />
-          ))}
+          {/* Redesigned wheel segments for equal spacing */}
+          {segments.map((segment, index) => {
+            const segmentAngle = 360 / segments.length;
+            const startAngle = index * segmentAngle;
+            const endAngle = (index + 1) * segmentAngle;
+            
+            // Alternate between white and red for segment colors
+            const isWhiteSegment = index % 2 === 0;
+            const segmentColor = isWhiteSegment ? '#FFFFFF' : '#B80000';
+            const textColor = isWhiteSegment ? '#B80000' : '#FFFFFF';
+            
+            return (
+              <div key={segment.id} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                {/* Create a wedge using conic-gradient */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: `conic-gradient(from ${startAngle}deg, ${segmentColor} 0deg, ${segmentColor} ${segmentAngle}deg, transparent ${segmentAngle}deg)`,
+                    borderRadius: '50%'
+                  }}
+                >
+                  {/* Gold divider lines */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      width: '50%',
+                      height: '2px',
+                      background: '#DAA520',
+                      transformOrigin: 'left center',
+                      transform: `rotate(${startAngle}deg)`,
+                      zIndex: 2,
+                      boxShadow: '0 0 2px rgba(218, 165, 32, 0.7)'
+                    }}
+                  ></div>
+                  
+                  {/* Text for this segment */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      width: 0,
+                      height: 0,
+                      transformOrigin: 'left center',
+                      transform: `rotate(${startAngle + segmentAngle/2}deg)`,
+                      zIndex: 3
+                    }}
+                  >
+                    <div 
+                      style={{
+                        position: 'absolute',
+                        width: '90px',
+                        textAlign: 'center',
+                        left: segments.length <= 12 ? '30px' : '25px',
+                        top: '-8px',
+                        transform: 'rotate(90deg)',
+                        color: textColor,
+                        fontWeight: 'bold',
+                        fontSize: segments.length <= 8 ? '16px' : '14px',
+                        lineHeight: '1.1',
+                        textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
+                        fontFamily: "'Arial', sans-serif"
+                      }}
+                    >
+                      {segment.text || "Prize"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
         
         {/* Pointer */}
