@@ -20,19 +20,13 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
   // Calculate text rotation to keep it readable
   const textRotation = 90 - (segmentAngle / 2);
 
-  // Alternate segment colors
+  // Alternate between gold and red colors only
   const baseColors = [
-    'bg-red-500',
-    'bg-blue-500',
-    'bg-yellow-500',
-    'bg-green-500',
-    'bg-purple-500',
-    'bg-orange-500',
-    'bg-pink-500',
-    'bg-emerald-500',
+    'bg-amber-500', // Gold
+    'bg-red-600',   // Red
   ];
   
-  // If a specific color is set in the DB, use it, otherwise alternate colors
+  // If a specific color is set in the DB, use it, otherwise alternate between gold and red
   const backgroundColor = segment.color || baseColors[index % baseColors.length];
   
   return (

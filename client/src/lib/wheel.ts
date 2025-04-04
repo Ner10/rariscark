@@ -25,17 +25,11 @@ export function calculateWinningRotation(
   return normalizedRotation + (additionalSpins * 360);
 }
 
-// Get the segment colors in a cycling pattern
+// Get the segment colors in a gold-red alternating pattern
 export function getSegmentColor(index: number): string {
   const colors = [
-    'bg-red-500', 
-    'bg-blue-500', 
-    'bg-yellow-500', 
-    'bg-green-500', 
-    'bg-purple-500', 
-    'bg-orange-500', 
-    'bg-pink-500', 
-    'bg-emerald-500'
+    'bg-amber-500', // Gold
+    'bg-red-600'    // Red
   ];
   return colors[index % colors.length];
 }
