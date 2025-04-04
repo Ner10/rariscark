@@ -1,0 +1,35 @@
+{
+  "name": "raris-cark",
+  "type": "javascript",
+  "account_id": "",
+  "workers_dev": true,
+  "route": "",
+  "zone_id": "",
+  "compatibility_date": "2023-09-01",
+  "site": {
+    "bucket": "./client/dist",
+    "entry-point": "server"
+  },
+  "build": {
+    "command": "npm run build",
+    "upload": {
+      "format": "service-worker"
+    }
+  },
+  "env": {
+    "production": {
+      "name": "raris-cark-prod",
+      "route": "*raris-cark.com/*"
+    },
+    "staging": {
+      "name": "raris-cark-staging"
+    }
+  },
+  "kv_namespaces": [
+    {
+      "binding": "TICKETS_STORE",
+      "id": "",
+      "preview_id": ""
+    }
+  ]
+}

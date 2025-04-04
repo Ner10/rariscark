@@ -1,0 +1,16 @@
+{
+  "description": "Raris Çark - Prize Wheel Application",
+  "environment_variables": [
+    {
+      "name": "SESSION_SECRET",
+      "type": "secret_text"
+    },
+    {
+      "name": "DATABASE_URL",
+      "type": "secret_text"
+    }
+  ],
+  "usage_model": "bundled",
+  "compatibility_date": "2023-09-01",
+  "main_module": "index.js"
+}
