@@ -162,33 +162,35 @@ const Wheel: React.FC<WheelProps> = ({
                     }}
                   ></div>
                   
-                  {/* Text for this segment */}
+                  {/* Text for this segment - completely redesigned to be upright and readable */}
                   <div 
                     style={{
                       position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      width: 0,
-                      height: 0,
-                      transformOrigin: 'left center',
-                      transform: `rotate(${startAngle + segmentAngle/2}deg)`,
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      pointerEvents: 'none',
                       zIndex: 3
                     }}
                   >
-                    <div 
+                    <div
                       style={{
                         position: 'absolute',
-                        width: '100px',
-                        textAlign: 'center',
-                        // Adjust distance from center based on segment size - matching reference image
-                        left: '60px', 
-                        top: '-12px',
-                        transform: 'rotate(90deg)',
+                        /* Position text in the middle of the segment, but 60% from center of wheel */
+                        left: `${50 + 35 * Math.cos((startAngle + segmentAngle/2) * Math.PI / 180)}%`,
+                        top: `${50 + 35 * Math.sin((startAngle + segmentAngle/2) * Math.PI / 180)}%`,
+                        transform: 'translate(-50%, -50%)',
                         color: textColor,
                         fontWeight: 'bold',
                         fontSize: '16px',
                         letterSpacing: '0.5px',
                         lineHeight: '1.1',
+                        textAlign: 'center',
+                        width: '80px',
                         textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
                         fontFamily: "'Arial', sans-serif"
                       }}
