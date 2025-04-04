@@ -3,8 +3,9 @@ import { Link } from 'wouter';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { celebrateWinner } from '@/lib/confetti';
+import { celebrateWinner, playClickSound } from '@/lib/confetti';
 import Wheel from '@/components/ui/wheel';
+import ThemeToggle from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -74,7 +75,7 @@ const Home: React.FC = () => {
   
   return (
     <div 
-      className="min-h-screen flex flex-col text-white"
+      className="min-h-screen flex flex-col text-white dark:text-gray-100"
       style={bgStyle}
     >
       <header className="py-4 px-6 flex items-center justify-between">
@@ -87,7 +88,7 @@ const Home: React.FC = () => {
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center p-6">
-        <div className="max-w-xl w-full bg-white/10 backdrop-blur-sm rounded-xl p-8 shadow-lg">
+        <div className="max-w-xl w-full bg-white/10 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-8 shadow-lg">
           <h1 className="text-3xl font-bold text-center mb-6">Spin the Wheel & Win!</h1>
           
           {/* Ticket Input */}
@@ -99,13 +100,13 @@ const Home: React.FC = () => {
                 value={ticketCode}
                 onChange={(e) => setTicketCode(e.target.value)}
                 placeholder="PRIZE-2023-XXXX"
-                className="flex-1 rounded-l-lg text-gray-800 border-0"
+                className="flex-1 rounded-l-lg text-gray-800 dark:text-white dark:bg-gray-700 border-0"
                 disabled={codeValidated || isSpinning}
               />
               <Button
                 onClick={verifyTicket}
                 disabled={!ticketCode || codeValidated || isSpinning}
-                className="bg-amber-500 hover:bg-amber-600 rounded-l-none rounded-r-lg"
+                className="bg-amber-500 hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 rounded-l-none rounded-r-lg"
               >
                 Verify
               </Button>
@@ -135,7 +136,7 @@ const Home: React.FC = () => {
               <Button
                 onClick={handleSpin}
                 disabled={!codeValidated || spinMutation.isPending || isSpinning}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-medium py-6 px-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="bg-indigo-600 hover:bg-indigo-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white text-lg font-medium py-6 px-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                 size="lg"
               >
                 SPIN THE WHEEL
@@ -148,6 +149,9 @@ const Home: React.FC = () => {
       <footer className="py-4 px-6 text-center text-white/70 text-sm">
         &copy; {new Date().getFullYear()} Prize Wheel Game. All rights reserved.
       </footer>
+
+      {/* Theme Toggle Button */}
+      <ThemeToggle />
     </div>
   );
 };

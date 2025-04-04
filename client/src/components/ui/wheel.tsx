@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { WheelSegment } from '@shared/schema';
 import { calculateSegmentRotation, calculateWinningRotation } from '@/lib/wheel';
+import { playSpinSound } from '@/lib/confetti';
 import WheelSegmentComponent from '../wheel-segment';
 import WheelPointer from '../wheel-pointer';
 
@@ -39,6 +40,9 @@ const Wheel: React.FC<WheelProps> = ({
       
       if (targetSegment) {
         setSpinning(true);
+        
+        // Play the spinning sound
+        playSpinSound();
         
         // Calculate the winning rotation
         const winRotation = calculateWinningRotation(
@@ -82,16 +86,7 @@ const Wheel: React.FC<WheelProps> = ({
         </div>
       </div>
       
-      {/* Add some CSS for the wheel animation */}
-      <style jsx>{`
-        .wheel {
-          transition: transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-        }
-        .wheel-container {
-          position: relative;
-          aspect-ratio: 1;
-        }
-      `}</style>
+
     </div>
   );
 };

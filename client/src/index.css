@@ -11,3 +11,42 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* Wheel Animation Styles */
+.wheel {
+  transition: transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+}
+
+.wheel-container {
+  position: relative;
+  aspect-ratio: 1;
+}
+
+/* Dark Mode/Light Mode Toggle Styles */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 50;
+  background-color: white;
+  color: #333;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* Animation for countdown timer */
+@keyframes countdown {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: 100%; }
+}
