@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 // Import the required modules
 import session from "express-session";
 import type { Store as SessionStore } from "express-session";
+import createMemoryStore from "memorystore";
 
 export interface IStorage {
   // User operations
@@ -44,8 +45,7 @@ export interface IStorage {
   sessionStore: SessionStore;
 }
 
-// Import the memory store
-import createMemoryStore from "memorystore";
+// Configure the memory store
 
 const MemoryStore = createMemoryStore(session);
 
@@ -110,12 +110,29 @@ export class MemStorage implements IStorage {
       'Free Shipping'
     ];
     
+    let segments: WheelSegment[] = [];
+    
     for (let i = 0; i < prizes.length; i++) {
-      await this.createWheelSegment({
+      const segment = await this.createWheelSegment({
         text: prizes[i],
         color: colors[i % colors.length],
         position: i
       });
+      segments.push(segment);
+    }
+    
+    // Create some sample tickets for demonstration
+    const sampleTickets = [
+      { code: 'PRIZE-2025-ABC123', segmentId: segments[0].id }, // $50 Gift Card
+      { code: 'PRIZE-2025-DEF456', segmentId: segments[2].id }, // 20% Off
+      { code: 'PRIZE-2025-GHI789', segmentId: segments[4].id }, // Free Product
+      { code: 'PRIZE-2025-JKL012', segmentId: segments[6].id }, // Mystery Box
+      { code: 'PRIZE-2025-MNO345', segmentId: segments[8].id }, // $25 Gift Card
+      { code: 'TEST-TICKET', segmentId: segments[10].id }, // $5 Discount
+    ];
+    
+    for (const ticket of sampleTickets) {
+      await this.createTicket(ticket);
     }
     
     // Add default settings
