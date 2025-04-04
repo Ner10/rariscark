@@ -27,26 +27,43 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
   const segmentStyle = {
     transform: `rotate(${rotation}deg)`,
     clipPath: `polygon(100% 0%, 100% 100%, 0% 0%)`,
-    background: isWhiteSegment ? '#FFFFFF' : '#B80000',
+    background: isWhiteSegment ? '#FFFAF0' : '#D20000', // Slightly adjusted colors for better contrast
     borderRight: '1px solid #DAA520',
     borderTop: '1px solid #DAA520',
   };
   
   // Use red text for white segments and white text for red segments
-  const textColor = isWhiteSegment ? '#B80000' : '#FFFFFF';
+  // Using a slightly darker red for better readability on white background
+  const textColor = isWhiteSegment ? '#990000' : '#FFFFFF';
   
-  // Calculate position based on number of segments
-  // Adjust these values based on totalSegments to properly position the text
-  let translateX = '50%';
-  let translateY = '120%';
+  // Calculate position adjustments for vertical text based on number of segments
+  let radialPosition = '40%';  // Default radial position along the segment
+  let textWidth = '25px';      // Default text container width
+  let letterSpacingValue = '-2px';
+  let fontSizeValue = '0.75rem';
+  const horizontalPosition = '50%';  // Center horizontally
   
   // Adjust for different segment counts
-  if (totalSegments === 12) {
-    translateY = '130%';
-  } else if (totalSegments >= 8 && totalSegments < 12) {
-    translateY = '120%';
-  } else if (totalSegments >= 16) {
-    translateY = '140%';
+  if (totalSegments <= 8) {
+    radialPosition = '45%';
+    textWidth = '35px'; 
+    letterSpacingValue = '-1px';
+    fontSizeValue = '0.85rem';
+  } else if (totalSegments <= 12) {
+    radialPosition = '40%';
+    textWidth = '30px';
+    letterSpacingValue = '-1.5px';
+    fontSizeValue = '0.78rem';
+  } else if (totalSegments <= 16) {
+    radialPosition = '35%';
+    textWidth = '25px';
+    letterSpacingValue = '-2px';
+    fontSizeValue = '0.7rem';
+  } else {
+    radialPosition = '30%';
+    textWidth = '20px';
+    letterSpacingValue = '-3px';
+    fontSizeValue = '0.65rem';
   }
   
   return (
@@ -65,31 +82,44 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
         }}
       ></div>
       
-      {/* Text container with proper positioning */}
+      {/* Text container with vertical text */}
       <div 
         className="absolute origin-center"
         style={{
           top: '0',
           right: '0',
-          transform: `rotate(${textRotation}deg) translate(${translateX}, ${translateY})`,
-          width: '100%',
-          textAlign: 'center',
+          transform: `rotate(${textRotation}deg) translate(${horizontalPosition}, ${radialPosition})`,
+          width: '50%',
+          height: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
-        <span 
-          className="font-bold text-sm md:text-base whitespace-pre-wrap inline-block"
+        <div
+          className="vertical-text"
           style={{ 
             color: textColor,
-            maxWidth: totalSegments > 8 ? '60px' : '80px',
+            width: textWidth,
+            letterSpacing: letterSpacingValue,
+            fontSize: fontSizeValue,
+            fontWeight: 'bold',
             lineHeight: '1',
             textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
             fontFamily: "'Arial', sans-serif",
-            fontWeight: 'bold',
-            padding: '0 2px',
+            padding: '2px',
+            textAlign: 'center',
+            transform: 'rotate(180deg)',
+            textTransform: 'uppercase',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           {segment.text || "Prize"}
-        </span>
+        </div>
       </div>
     </div>
   );

@@ -76,3 +76,21 @@
   from { stroke-dashoffset: 0; }
   to { stroke-dashoffset: 100%; }
 }
+
+/* Vertical text styles for wheel segments */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  -webkit-writing-mode: vertical-rl;
+  -webkit-text-orientation: upright;
+  -ms-writing-mode: tb-rl;
+  -moz-writing-mode: vertical-rl;
+}
+
+/* Optimize vertical text for various browser compatibilities */
+@supports not (writing-mode: vertical-rl) {
+  .vertical-text {
+    transform: rotate(90deg);
+    white-space: nowrap;
+  }
+}
