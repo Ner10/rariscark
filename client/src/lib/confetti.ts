@@ -112,12 +112,16 @@ export function createConfetti() {
 
 // Export a function to create confetti and show winner modal with countdown
 export function celebrateWinner(prize: string, onClose?: () => void) {
+  // Start confetti animation immediately
   createConfetti();
   
-  // Create and display winner modal
+  // Create modal element but don't add to DOM yet
   const modal = document.createElement('div');
   modal.className = 'fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50';
   modal.style.animation = 'fadeIn 0.3s ease-out forwards';
+  
+  // The prize popup is already shown after a 3-second delay by the wheel component
+  // so we don't need an additional delay here
   
   const timeoutDuration = 5; // 5 seconds countdown
   

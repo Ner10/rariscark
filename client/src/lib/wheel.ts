@@ -10,14 +10,14 @@ export function calculateSegmentRotation(position: number, totalSegments: number
 export function calculateWinningRotation(
   segmentPosition: number, 
   totalSegments: number, 
-  additionalSpins = 5
+  additionalSpins = 1 // Reduced to only 1 full rotation
 ): number {
   const segmentAngle = 360 / totalSegments;
   const segmentRotation = segmentPosition * segmentAngle;
   
   // To have the segment at the top (winner position), we need to rotate
   // the wheel so that the segment is at 270 degrees (bottom becomes top)
-  // We add multiple full rotations for animation effect
+  // We add one full rotation for animation effect
   const baseRotation = 270 - segmentRotation;
   
   // Normalize to positive angle and add additional spins

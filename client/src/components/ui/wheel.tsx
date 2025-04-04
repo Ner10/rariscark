@@ -43,11 +43,11 @@ const Wheel: React.FC<WheelProps> = ({
         // Play the spinning sound
         playSpinSound();
         
-        // Calculate the winning rotation
+        // Calculate the winning rotation with just one full rotation
         const winRotation = calculateWinningRotation(
           targetSegment.position,
           segments.length,
-          5 // 5 full rotations for effect
+          1 // Only 1 full rotation for slower effect
         );
         
         // Set the rotation
@@ -60,10 +60,14 @@ const Wheel: React.FC<WheelProps> = ({
           stopSpinSound();
           playWinSound();
           
-          if (onSpinEnd) {
-            onSpinEnd(targetSegment);
-          }
-        }, 5000); // Match the CSS transition duration
+          // Wait 3 seconds before showing the prize popup (as requested)
+          setTimeout(() => {
+            if (onSpinEnd) {
+              onSpinEnd(targetSegment);
+            }
+          }, 3000);
+          
+        }, 7000); // Match the CSS transition duration
       }
     }
   }, [isSpinning, targetSegmentId, segments, onSpinEnd]);
