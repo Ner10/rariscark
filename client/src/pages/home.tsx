@@ -37,8 +37,8 @@ const Home: React.FC = () => {
     },
     onError: (error: Error) => {
       toast({
-        title: 'Error',
-        description: error.message || 'Failed to spin the wheel',
+        title: 'Hata',
+        description: error.message || 'Çark çevirme işlemi başarısız oldu',
         variant: 'destructive',
       });
       setCodeValidated(false);
@@ -50,8 +50,8 @@ const Home: React.FC = () => {
     
     if (!ticketCode.trim()) {
       toast({
-        title: 'Error',
-        description: 'Please enter a ticket code',
+        title: 'Hata',
+        description: 'Lütfen bir bilet kodu giriniz',
         variant: 'destructive',
       });
       return;

@@ -6,7 +6,8 @@ export { playClickSound };
 
 // Helper function to create confetti effects with enhanced animation
 export function createConfetti() {
-  const colors = ['#F59E0B', '#10B981', '#4F46E5', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+  // Updated color palette - replaced purple tones with red shades
+  const colors = ['#F59E0B', '#10B981', '#DC2626', '#EF4444', '#B91C1C', '#7F1D1D', '#06B6D4', '#84CC16'];
   const confettiCount = 150; // Increased count for more vibrant effect
 
   // Play win sound
@@ -131,22 +132,22 @@ export function celebrateWinner(prize: string, onClose?: () => void) {
         <div class="text-5xl text-amber-500 mb-4">
           <i class="fas fa-trophy"></i>
         </div>
-        <h2 class="text-3xl font-bold mb-2">Congratulations!</h2>
-        <p class="text-xl mb-6">You've won: <span class="font-bold">${prize}</span></p>
-        <p class="mb-4 text-gray-600">Your prize has been recorded. Thank you for playing!</p>
+        <h2 class="text-3xl font-bold mb-2">Tebrikler!</h2>
+        <p class="text-xl mb-6">Kazandınız: <span class="font-bold">${prize}</span></p>
+        <p class="mb-4 text-gray-600">Ödülünüz kaydedildi. Oynadığınız için teşekkürler!</p>
         
         <div class="countdown-wrapper mb-6">
           <div class="countdown-ring relative mx-auto w-20 h-20">
             <svg class="w-full h-full" viewBox="0 0 100 100">
               <circle class="text-gray-200" stroke-width="8" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50" />
-              <circle id="countdown-circle" class="text-indigo-600" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50" />
+              <circle id="countdown-circle" class="text-red-600" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="42" cx="50" cy="50" />
             </svg>
-            <span id="countdown-timer" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl font-bold text-indigo-600">${timeoutDuration}</span>
+            <span id="countdown-timer" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl font-bold text-red-600">${timeoutDuration}</span>
           </div>
         </div>
         
-        <button id="close-modal" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-lg">
-          Close
+        <button id="close-modal" class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg">
+          Kapat
         </button>
       </div>
     </div>
