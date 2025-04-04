@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useWheelContext } from '@/context/wheel-context';
+import backgroundImage from '@assets/bg5.jpg';
 
 const Home: React.FC = () => {
   const [ticketCode, setTicketCode] = useState('');
@@ -73,89 +74,101 @@ const Home: React.FC = () => {
     });
   };
   
-  const bgStyle = settings?.background_color 
-    ? { background: settings.background_color }
-    : { background: 'linear-gradient(to bottom, #4F46E5, #4338CA)' };
+  // Use the uploaded background image instead of settings
+  const bgStyle = {
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  };
   
   return (
-    <div 
-      className="min-h-screen flex flex-col text-white dark:text-gray-100"
-      style={bgStyle}
-    >
-      <header className="py-4 px-6 flex items-center justify-between">
-        <div className="text-2xl font-bold">Prize Wheel Game</div>
-        <div>
-          <Link href="/admin" className="text-sm text-white/70 hover:text-white">
-            Admin Login
-          </Link>
-        </div>
-      </header>
-
-      <main className="flex-1 flex flex-col items-center justify-center p-6">
-        <div className="max-w-xl w-full bg-white/10 dark:bg-gray-800/70 backdrop-blur-sm rounded-xl p-8 shadow-lg">
-          <h1 className="text-3xl font-bold text-center mb-6">Spin the Wheel & Win!</h1>
-          
-          {/* Ticket Input */}
-          <div className="mb-8">
-            <label className="block text-lg mb-2">Enter your ticket code:</label>
-            <div className="flex">
-              <Input
-                type="text"
-                value={ticketCode}
-                onChange={(e) => setTicketCode(e.target.value)}
-                placeholder="PRIZE-2023-XXXX"
-                className="flex-1 rounded-l-lg text-gray-800 dark:text-white dark:bg-gray-700 border-0"
-                disabled={codeValidated || isSpinning}
-              />
-              <Button
-                onClick={verifyTicket}
-                disabled={!ticketCode || codeValidated || isSpinning}
-                className="bg-amber-500 hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700 rounded-l-none rounded-r-lg"
-              >
-                Verify
-              </Button>
-            </div>
-            {spinMutation.isError && (
-              <div className="mt-2 text-red-300 text-sm">
-                Invalid ticket code. Please check and try again.
-              </div>
-            )}
+    <div className="min-h-screen flex flex-col text-white relative">
+      {/* Background image container */}
+      <div 
+        className="absolute inset-0 z-0" 
+        style={bgStyle}>
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/40"></div>
+      </div>
+      
+      {/* Content container */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <header className="py-4 px-6 flex items-center justify-between">
+          <div className="text-2xl font-bold">Prize Wheel Game</div>
+          <div>
+            <Link href="/admin" className="text-sm text-white/70 hover:text-white">
+              Admin Login
+            </Link>
           </div>
+        </header>
 
-          {/* Wheel Section */}
-          <div className="flex flex-col items-center">
-            {isLoading ? (
-              <Skeleton className="w-80 h-80 rounded-full" />
-            ) : (
-              <Wheel 
-                segments={segments} 
-                isSpinning={isSpinning}
-                targetSegmentId={targetSegmentId}
-                onSpinEnd={handleSpinEnd}
-                size="lg"
-              />
-            )}
+        <main className="flex-1 flex flex-col items-center justify-center p-6">
+          <div className="max-w-xl w-full bg-black/40 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-[#800000]/30">
+            <h1 className="text-3xl font-bold text-center mb-6">Spin the Wheel & Win!</h1>
             
-            <div className="mt-8">
-              <Button
-                onClick={handleSpin}
-                disabled={!codeValidated || spinMutation.isPending || isSpinning}
-                className="bg-indigo-600 hover:bg-indigo-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white text-lg font-medium py-6 px-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                size="lg"
-              >
-                SPIN THE WHEEL
-              </Button>
+            {/* Ticket Input */}
+            <div className="mb-8">
+              <label className="block text-lg mb-2">Enter your ticket code:</label>
+              <div className="flex">
+                <Input
+                  type="text"
+                  value={ticketCode}
+                  onChange={(e) => setTicketCode(e.target.value)}
+                  placeholder="PRIZE-2025-XXXX"
+                  className="flex-1 rounded-l-lg text-white bg-black/30 border-[#800000]/30"
+                  disabled={codeValidated || isSpinning}
+                />
+                <Button
+                  onClick={verifyTicket}
+                  disabled={!ticketCode || codeValidated || isSpinning}
+                  className="bg-[#800000] hover:bg-[#a00000] rounded-l-none rounded-r-lg"
+                >
+                  Verify
+                </Button>
+              </div>
+              {spinMutation.isError && (
+                <div className="mt-2 text-red-300 text-sm">
+                  Invalid ticket code. Please check and try again.
+                </div>
+              )}
+            </div>
+
+            {/* Wheel Section */}
+            <div className="flex flex-col items-center">
+              {isLoading ? (
+                <Skeleton className="w-80 h-80 rounded-full" />
+              ) : (
+                <Wheel 
+                  segments={segments} 
+                  isSpinning={isSpinning}
+                  targetSegmentId={targetSegmentId}
+                  onSpinEnd={handleSpinEnd}
+                  size="lg"
+                />
+              )}
+              
+              <div className="mt-8">
+                <Button
+                  onClick={handleSpin}
+                  disabled={!codeValidated || spinMutation.isPending || isSpinning}
+                  className="bg-gradient-to-r from-[#800000] to-[#5c0000] hover:from-[#a00000] hover:to-[#700000] text-white text-lg font-medium py-6 px-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                  size="lg"
+                >
+                  SPIN THE WHEEL
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </main>
+        </main>
 
-      <footer className="py-4 px-6 text-center text-white/70 text-sm">
-        &copy; {new Date().getFullYear()} Prize Wheel Game. All rights reserved.
-      </footer>
+        <footer className="py-4 px-6 text-center text-white/70 text-sm">
+          &copy; {new Date().getFullYear()} Prize Wheel Game. All rights reserved.
+        </footer>
 
-      {/* Theme Toggle Button */}
-      <ThemeToggle />
+        {/* Theme Toggle Button */}
+        <ThemeToggle />
+      </div>
     </div>
   );
 };

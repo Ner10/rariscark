@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Loader2 } from "lucide-react";
+import backgroundImage from "@assets/bg5.jpg";
 
 // Extend the schema to add validation rules
 const loginSchema = insertUserSchema.pick({
@@ -54,19 +55,30 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background/95">
-      <div className="w-full max-w-md">
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 relative"
+      style={{
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black/40"></div>
+      
+      <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Prize Wheel Admin</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-4xl font-bold tracking-tight text-white">Prize Wheel Admin</h1>
+          <p className="text-white/80 mt-2">
             Login to manage your prize wheel
           </p>
         </div>
         
-        <Card className="shadow-lg border-primary/10">
+        <Card className="shadow-xl backdrop-blur-sm bg-black/50 border-[#800000]/30">
           <CardHeader>
-            <CardTitle>Admin Login</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-white">Admin Login</CardTitle>
+            <CardDescription className="text-white/70">
               Enter your credentials to access the admin dashboard
             </CardDescription>
           </CardHeader>
@@ -78,11 +90,15 @@ export default function AuthPage() {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Username</FormLabel>
+                      <FormLabel className="text-white">Username</FormLabel>
                       <FormControl>
-                        <Input placeholder="admin" {...field} />
+                        <Input 
+                          placeholder="admin" 
+                          {...field} 
+                          className="bg-black/30 border-[#800000]/50 text-white placeholder:text-white/50"
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-300" />
                     </FormItem>
                   )}
                 />
@@ -91,17 +107,22 @@ export default function AuthPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel className="text-white">Password</FormLabel>
                       <FormControl>
-                        <Input type="password" placeholder="******" {...field} />
+                        <Input 
+                          type="password" 
+                          placeholder="******" 
+                          {...field} 
+                          className="bg-black/30 border-[#800000]/50 text-white placeholder:text-white/50"
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-300" />
                     </FormItem>
                   )}
                 />
                 <Button 
                   type="submit" 
-                  className="w-full mt-2" 
+                  className="w-full mt-2 bg-gradient-to-r from-[#800000] to-[#5c0000] hover:from-[#a00000] hover:to-[#700000]" 
                   disabled={loginMutation.isPending}
                 >
                   {loginMutation.isPending ? (
