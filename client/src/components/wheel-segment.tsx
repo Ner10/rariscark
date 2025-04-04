@@ -35,9 +35,23 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
   // Use red text for white segments and white text for red segments
   const textColor = isWhiteSegment ? '#B80000' : '#FFFFFF';
   
+  // Calculate position based on number of segments
+  // Adjust these values based on totalSegments to properly position the text
+  let translateX = '50%';
+  let translateY = '120%';
+  
+  // Adjust for different segment counts
+  if (totalSegments === 12) {
+    translateY = '130%';
+  } else if (totalSegments >= 8 && totalSegments < 12) {
+    translateY = '120%';
+  } else if (totalSegments >= 16) {
+    translateY = '140%';
+  }
+  
   return (
     <div
-      className="wheel-segment absolute w-1/2 h-1/2 top-0 left-0 origin-bottom-right flex items-start justify-center pt-2 overflow-hidden"
+      className="wheel-segment absolute w-1/2 h-1/2 top-0 left-0 origin-bottom-right flex items-start justify-center overflow-hidden"
       style={segmentStyle}
     >
       {/* Add subtle gradient effect */}
@@ -51,18 +65,32 @@ const WheelSegmentComponent: React.FC<WheelSegmentProps> = ({
         }}
       ></div>
       
-      <span 
-        className="font-bold text-sm md:text-base whitespace-nowrap max-w-[80px] text-center leading-tight transform origin-center rotate-180"
-        style={{ 
-          color: textColor,
-          transform: `rotate(${textRotation}deg) translateY(40%)`,
-          textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
-          fontFamily: "'Arial', sans-serif",
-          fontWeight: 'bold',
+      {/* Text container with proper positioning */}
+      <div 
+        className="absolute origin-center"
+        style={{
+          top: '0',
+          right: '0',
+          transform: `rotate(${textRotation}deg) translate(${translateX}, ${translateY})`,
+          width: '100%',
+          textAlign: 'center',
         }}
       >
-        {segment.text}
-      </span>
+        <span 
+          className="font-bold text-sm md:text-base whitespace-pre-wrap inline-block"
+          style={{ 
+            color: textColor,
+            maxWidth: totalSegments > 8 ? '60px' : '80px',
+            lineHeight: '1',
+            textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
+            fontFamily: "'Arial', sans-serif",
+            fontWeight: 'bold',
+            padding: '0 2px',
+          }}
+        >
+          {segment.text || "Prize"}
+        </span>
+      </div>
     </div>
   );
 };
