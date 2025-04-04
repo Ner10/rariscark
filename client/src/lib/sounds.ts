@@ -1,9 +1,10 @@
 import { Howl } from 'howler';
 
 // Create Howl instances for our sounds using publicly available sounds
+// Using a shorter spinning sound that will loop during wheel rotation
 const spinSound = new Howl({
-  src: ['https://assets.mixkit.co/active_storage/sfx/550/550-preview.mp3'],
-  volume: 0.5,
+  src: ['https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3'],
+  volume: 0.4,
   loop: true
 });
 

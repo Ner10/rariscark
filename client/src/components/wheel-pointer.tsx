@@ -2,27 +2,27 @@ import React from 'react';
 
 const WheelPointer: React.FC = () => {
   return (
-    <div className="wheel-pointer absolute -top-6 left-1/2 -translate-x-1/2 w-10 h-16 z-20">
-      {/* Golden triangle pointer with glowing effect - matching reference image */}
-      <div className="w-full h-full">
+    <div className="wheel-pointer absolute -top-8 left-1/2 -translate-x-1/2 w-14 h-20 z-20">
+      {/* Golden triangle pointer with glowing effect - rotated to point inward */}
+      <div className="w-full h-full rotate-180">
         <svg width="100%" height="100%" viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
           {/* Glow effect */}
           <filter id="pointerGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feGaussianBlur stdDeviation="3" result="blur" />
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
           
-          {/* Triangle shape */}
+          {/* Triangle shape - enlarged and pointing inward */}
           <path 
-            d="M20 0 L40 25 L0 25 Z" 
+            d="M20 0 L40 30 L0 30 Z" 
             fill="url(#pointerGradient)"
             filter="url(#pointerGlow)"
-            style={{ filter: 'drop-shadow(0px 0px 5px rgba(255, 215, 0, 0.7))' }}
+            style={{ filter: 'drop-shadow(0px 0px 6px rgba(255, 215, 0, 0.8))' }}
           />
           
           {/* Highlight reflection */}
           <path 
-            d="M20 5 L32 22 L8 22 Z" 
+            d="M20 5 L35 25 L5 25 Z" 
             fill="url(#pointerHighlight)"
             opacity="0.7"
           />
@@ -31,7 +31,7 @@ const WheelPointer: React.FC = () => {
           <circle 
             cx="20" 
             cy="5" 
-            r="3" 
+            r="4" 
             fill="url(#screwGradient)"
             stroke="#B8860B"
             strokeWidth="0.5"
