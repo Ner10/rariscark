@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { playClickSound } from '@/lib/confetti';
+import { playClickSound } from '@/lib/sounds';
 
 interface ThemeToggleProps {
   className?: string;

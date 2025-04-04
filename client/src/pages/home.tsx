@@ -3,7 +3,8 @@ import { Link } from 'wouter';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { celebrateWinner, playClickSound } from '@/lib/confetti';
+import { celebrateWinner } from '@/lib/confetti';
+import { playClickSound } from '@/lib/sounds';
 import Wheel from '@/components/ui/wheel';
 import ThemeToggle from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
@@ -44,6 +45,8 @@ const Home: React.FC = () => {
   });
   
   const verifyTicket = () => {
+    playClickSound();
+    
     if (!ticketCode.trim()) {
       toast({
         title: 'Error',
@@ -57,6 +60,7 @@ const Home: React.FC = () => {
   };
   
   const handleSpin = () => {
+    playClickSound();
     spinMutation.mutate(ticketCode);
   };
   

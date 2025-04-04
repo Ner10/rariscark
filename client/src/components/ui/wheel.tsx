@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { WheelSegment } from '@shared/schema';
 import { calculateWinningRotation } from '@/lib/wheel';
-import { playSpinSound } from '@/lib/confetti';
+import { playSpinSound, stopSpinSound, playWinSound } from '@/lib/sounds';
 import WheelPointer from '../wheel-pointer';
 
 interface WheelProps {
@@ -56,6 +56,10 @@ const Wheel: React.FC<WheelProps> = ({
         // Call onSpinEnd when animation completes
         setTimeout(() => {
           setSpinning(false);
+          // Stop the spinning sound and play the win sound
+          stopSpinSound();
+          playWinSound();
+          
           if (onSpinEnd) {
             onSpinEnd(targetSegment);
           }

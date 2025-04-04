@@ -1,20 +1,8 @@
-import { Howl } from 'howler';
+// Import sound functions from our sounds.ts utility
+import { playWinSound, playClickSound } from './sounds';
 
-// Sound effects
-const sounds = {
-  win: new Howl({
-    src: ['https://assets.mixkit.co/active_storage/sfx/2005/2005-preview.mp3'],
-    volume: 0.5,
-  }),
-  spin: new Howl({
-    src: ['https://assets.mixkit.co/active_storage/sfx/550/550-preview.mp3'],
-    volume: 0.3,
-  }),
-  click: new Howl({
-    src: ['https://assets.mixkit.co/active_storage/sfx/270/270-preview.mp3'],
-    volume: 0.2,
-  })
-};
+// Re-export for backward compatibility
+export { playClickSound };
 
 // Helper function to create confetti effects with enhanced animation
 export function createConfetti() {
@@ -22,7 +10,7 @@ export function createConfetti() {
   const confettiCount = 150; // Increased count for more vibrant effect
 
   // Play win sound
-  sounds.win.play();
+  playWinSound();
 
   // Create container for all confetti pieces
   const confettiContainer = document.createElement('div');
@@ -120,16 +108,6 @@ export function createConfetti() {
   setTimeout(() => {
     confettiContainer.remove();
   }, 7000);
-}
-
-// Function to play click sound - can be used for UI interactions
-export function playClickSound() {
-  sounds.click.play();
-}
-
-// Function to play spin sound - for when the wheel starts spinning
-export function playSpinSound() {
-  sounds.spin.play();
 }
 
 // Export a function to create confetti and show winner modal with countdown
