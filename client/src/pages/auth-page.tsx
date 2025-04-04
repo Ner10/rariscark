@@ -69,17 +69,17 @@ export default function AuthPage() {
       
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white">Prize Wheel Admin</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-white">Raris Çark Yönetici</h1>
           <p className="text-white/80 mt-2">
-            Login to manage your prize wheel
+            Çarkınızı yönetmek için giriş yapın
           </p>
         </div>
         
         <Card className="shadow-xl backdrop-blur-sm bg-black/50 border-[#800000]/30">
           <CardHeader>
-            <CardTitle className="text-white">Admin Login</CardTitle>
+            <CardTitle className="text-white">Yönetici Girişi</CardTitle>
             <CardDescription className="text-white/70">
-              Enter your credentials to access the admin dashboard
+              Yönetici paneline erişmek için kimlik bilgilerinizi girin
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -90,7 +90,7 @@ export default function AuthPage() {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Username</FormLabel>
+                      <FormLabel className="text-white">Kullanıcı Adı</FormLabel>
                       <FormControl>
                         <Input 
                           placeholder="admin" 
@@ -107,7 +107,7 @@ export default function AuthPage() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">Password</FormLabel>
+                      <FormLabel className="text-white">Şifre</FormLabel>
                       <FormControl>
                         <Input 
                           type="password" 
@@ -128,10 +128,10 @@ export default function AuthPage() {
                   {loginMutation.isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Logging in...
+                      Giriş yapılıyor...
                     </>
                   ) : (
-                    "Login"
+                    "Giriş Yap"
                   )}
                 </Button>
               </form>

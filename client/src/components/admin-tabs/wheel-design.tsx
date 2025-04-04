@@ -46,15 +46,15 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/wheel/segments'] });
       toast({
-        title: 'Success',
-        description: 'New segment added to wheel',
+        title: 'Başarılı',
+        description: 'Çarka yeni dilim eklendi',
         variant: 'default',
       });
     },
     onError: (error) => {
       toast({
-        title: 'Error',
-        description: 'Failed to add segment',
+        title: 'Hata',
+        description: 'Dilim eklenemedi',
         variant: 'destructive',
       });
     }
@@ -74,15 +74,15 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
       queryClient.invalidateQueries({ queryKey: ['/api/wheel/segments'] });
       setIsEditing(false);
       toast({
-        title: 'Success',
-        description: 'Segment updated successfully',
+        title: 'Başarılı',
+        description: 'Dilim başarıyla güncellendi',
         variant: 'default',
       });
     },
     onError: (error) => {
       toast({
-        title: 'Error',
-        description: 'Failed to update segment',
+        title: 'Hata',
+        description: 'Dilim güncellenemedi',
         variant: 'destructive',
       });
     }
@@ -97,15 +97,15 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/wheel/segments'] });
       toast({
-        title: 'Success',
-        description: 'Segment removed from wheel',
+        title: 'Başarılı',
+        description: 'Dilim çarktan kaldırıldı',
         variant: 'default',
       });
     },
     onError: (error) => {
       toast({
-        title: 'Error',
-        description: 'Failed to delete segment',
+        title: 'Hata',
+        description: 'Dilim silinemedi',
         variant: 'destructive',
       });
     }
@@ -131,8 +131,8 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
   const handleDeleteSegment = (id: number) => {
     if (segments.length <= 2) {
       toast({
-        title: 'Cannot Delete',
-        description: 'The wheel must have at least 2 segments',
+        title: 'Silinemez',
+        description: 'Çarkta en az 2 dilim olmalıdır',
         variant: 'destructive',
       });
       return;
@@ -143,25 +143,25 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
   
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Edit Wheel Design</h2>
+      <h2 className="text-2xl font-bold mb-6">Çark Tasarımını Düzenle</h2>
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Preview Section */}
           <div className="flex-1 flex flex-col items-center">
-            <h3 className="text-lg font-semibold mb-4">Wheel Preview</h3>
+            <h3 className="text-lg font-semibold mb-4">Çark Önizleme</h3>
             <Wheel segments={segments} size="lg" />
           </div>
           
           {/* Editor Section */}
           <div className="flex-1">
-            <h3 className="text-lg font-semibold mb-4">Segment Editor</h3>
+            <h3 className="text-lg font-semibold mb-4">Dilim Düzenleyici</h3>
             <div className="mb-4">
               <Button 
                 onClick={() => addSegmentMutation.mutate()}
                 disabled={addSegmentMutation.isPending}
                 className="bg-indigo-600 hover:bg-indigo-700"
               >
-                <i className="fas fa-plus mr-2"></i> Add Segment
+                <i className="fas fa-plus mr-2"></i> Dilim Ekle
               </Button>
             </div>
             
@@ -205,31 +205,31 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Segment</DialogTitle>
+            <DialogTitle>Dilimi Düzenle</DialogTitle>
           </DialogHeader>
           
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Prize Text</label>
+              <label className="text-sm font-medium">Ödül Metni</label>
               <Input 
                 type="text" 
                 value={editText} 
                 onChange={(e) => setEditText(e.target.value)}
-                placeholder="Enter prize name"
+                placeholder="Ödül adını girin"
                 className="w-full"
               />
             </div>
             
             <div className="grid gap-2">
-              <label className="text-sm font-medium">Segment Color</label>
+              <label className="text-sm font-medium">Dilim Rengi</label>
               <div className="flex space-x-2">
                 {colors.map((color) => (
                   <button
                     key={color}
                     type="button"
                     onClick={() => setEditColor(color)}
-                    className={`w-8 h-8 rounded-full ${editColor === color ? 'ring-2 ring-offset-2' : ''}`}
-                    style={{ backgroundColor: color, ringColor: color }}
+                    className={`w-8 h-8 rounded-full ${editColor === color ? 'ring-2 ring-offset-2 ring-' + color : ''}`}
+                    style={{ backgroundColor: color }}
                   />
                 ))}
               </div>
@@ -241,14 +241,14 @@ const WheelDesign: React.FC<WheelDesignProps> = ({ segments }) => {
               variant="outline" 
               onClick={() => setIsEditing(false)}
             >
-              Cancel
+              İptal
             </Button>
             <Button 
               onClick={handleSaveSegment}
               disabled={updateSegmentMutation.isPending}
               className="bg-indigo-600 hover:bg-indigo-700"
             >
-              Save Changes
+              Değişiklikleri Kaydet
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -57,13 +57,13 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
   
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Winners List</h2>
+      <h2 className="text-2xl font-bold mb-6">Kazananlar Listesi</h2>
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="p-4 border-b flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center space-x-2 w-full sm:w-auto">
             <Input
               type="text"
-              placeholder="Search winners..."
+              placeholder="Kazananları ara..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full"
@@ -75,10 +75,10 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
           <div className="w-full sm:w-auto">
             <Select value={prizeFilter} onValueChange={setPrizeFilter}>
               <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="Filter by prize" />
+                <SelectValue placeholder="Ödüle göre filtrele" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Prizes</SelectItem>
+                <SelectItem value="all">Tüm Ödüller</SelectItem>
                 {segments.map((segment) => (
                   <SelectItem key={segment.id} value={segment.id.toString()}>
                     {segment.text}
@@ -93,10 +93,10 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Ticket Code</TableHead>
-                <TableHead>Prize</TableHead>
-                <TableHead>IP Address</TableHead>
+                <TableHead>Tarih</TableHead>
+                <TableHead>Bilet Kodu</TableHead>
+                <TableHead>Ödül</TableHead>
+                <TableHead>IP Adresi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -116,15 +116,15 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
                     </TableCell>
                     <TableCell className="font-medium">{winner.code}</TableCell>
                     <TableCell>{winner.prize}</TableCell>
-                    <TableCell className="text-gray-500">{winner.ipAddress || 'Unknown'}</TableCell>
+                    <TableCell className="text-gray-500">{winner.ipAddress || 'Bilinmiyor'}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell colSpan={4} className="text-center py-8 text-gray-500">
                     {search || prizeFilter !== 'all' 
-                      ? 'No winners match your filters' 
-                      : 'No winners yet'}
+                      ? 'Filtrelere uygun kazanan bulunamadı' 
+                      : 'Henüz kazanan yok'}
                   </TableCell>
                 </TableRow>
               )}
@@ -137,7 +137,7 @@ const WinnersList: React.FC<WinnersListProps> = ({ segments }) => {
             <div className="flex justify-between items-center">
               <div>
                 <p className="text-sm text-gray-700">
-                  Showing <span className="font-medium">{filteredWinners.length}</span> results
+                  <span className="font-medium">{filteredWinners.length}</span> sonuç gösteriliyor
                 </p>
               </div>
             </div>

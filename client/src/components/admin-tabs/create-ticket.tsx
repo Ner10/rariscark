@@ -53,15 +53,15 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/tickets'] });
       toast({
-        title: "Success!",
-        description: `Generated ${data.length} ticket${data.length > 1 ? 's' : ''}`,
+        title: "Başarılı!",
+        description: `${data.length} adet bilet oluşturuldu`,
         variant: "default",
       });
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        description: "Failed to generate tickets. Please try again.",
+        title: "Hata",
+        description: "Biletler oluşturulamadı. Lütfen tekrar deneyin.",
         variant: "destructive",
       });
     }
@@ -70,8 +70,8 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
   const handleGenerateTickets = () => {
     if (!selectedSegmentId) {
       toast({
-        title: "Error",
-        description: "Please select a prize for the ticket.",
+        title: "Hata",
+        description: "Lütfen bilet için bir ödül seçin.",
         variant: "destructive",
       });
       return;
@@ -82,16 +82,16 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
   
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">Create Tickets</h2>
+      <h2 className="text-2xl font-bold mb-6">Bilet Oluştur</h2>
       <div className="bg-white rounded-lg shadow p-6">
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Select Prize</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Ödül Seçin</label>
           <Select 
             value={selectedSegmentId} 
             onValueChange={setSelectedSegmentId}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="-- Select Prize --" />
+              <SelectValue placeholder="-- Ödül Seçin --" />
             </SelectTrigger>
             <SelectContent>
               {segments.map((segment) => (
@@ -104,7 +104,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
         </div>
         
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Number of Tickets</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Bilet Sayısı</label>
           <Input
             type="number"
             value={ticketCount}
@@ -116,7 +116,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
         </div>
         
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Expiration Date (Optional)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Son Kullanma Tarihi (İsteğe Bağlı)</label>
           <Input
             type="date"
             value={expirationDate}
@@ -131,20 +131,20 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
           disabled={generateTicketsMutation.isPending || !selectedSegmentId}
           className="bg-indigo-600 hover:bg-indigo-700"
         >
-          Generate Tickets
+          Bilet Oluştur
         </Button>
         
         {/* Recently Generated Tickets */}
         <div className="mt-8">
-          <h3 className="text-lg font-medium mb-3">Recently Generated Tickets</h3>
+          <h3 className="text-lg font-medium mb-3">Son Oluşturulan Biletler</h3>
           <div className="border rounded overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Ticket Code</TableHead>
-                  <TableHead>Prize</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>Bilet Kodu</TableHead>
+                  <TableHead>Ödül</TableHead>
+                  <TableHead>Oluşturulma</TableHead>
+                  <TableHead>Durum</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -153,16 +153,16 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
                   return (
                     <TableRow key={ticket.id}>
                       <TableCell className="font-medium">{ticket.code}</TableCell>
-                      <TableCell>{segment?.text || 'Unknown'}</TableCell>
+                      <TableCell>{segment?.text || 'Bilinmeyen'}</TableCell>
                       <TableCell>{format(new Date(ticket.createdAt), 'MMM d, yyyy')}</TableCell>
                       <TableCell>
                         {ticket.used ? (
                           <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">
-                            Used
+                            Kullanıldı
                           </Badge>
                         ) : (
                           <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">
-                            Active
+                            Aktif
                           </Badge>
                         )}
                       </TableCell>
@@ -173,7 +173,7 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
                 {recentTickets.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={4} className="text-center py-4 text-gray-500">
-                      No tickets generated yet
+                      Henüz bilet oluşturulmadı
                     </TableCell>
                   </TableRow>
                 )}

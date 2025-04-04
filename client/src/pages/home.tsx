@@ -95,21 +95,21 @@ const Home: React.FC = () => {
       {/* Content container */}
       <div className="relative z-10 flex flex-col min-h-screen">
         <header className="py-4 px-6 flex items-center justify-between">
-          <div className="text-2xl font-bold">Prize Wheel Game</div>
+          <div className="text-2xl font-bold">Raris Çark</div>
           <div>
             <Link href="/admin" className="text-sm text-white/70 hover:text-white">
-              Admin Login
+              Yönetici Girişi
             </Link>
           </div>
         </header>
 
         <main className="flex-1 flex flex-col items-center justify-center p-6">
           <div className="max-w-xl w-full bg-black/40 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-[#800000]/30">
-            <h1 className="text-3xl font-bold text-center mb-6">Spin the Wheel & Win!</h1>
+            <h1 className="text-3xl font-bold text-center mb-6">Çarkı Çevir ve Kazan!</h1>
             
             {/* Ticket Input */}
             <div className="mb-8">
-              <label className="block text-lg mb-2">Enter your ticket code:</label>
+              <label className="block text-lg mb-2">Bilet kodunuzu giriniz:</label>
               <div className="flex">
                 <Input
                   type="text"
@@ -124,12 +124,12 @@ const Home: React.FC = () => {
                   disabled={!ticketCode || codeValidated || isSpinning}
                   className="bg-[#800000] hover:bg-[#a00000] rounded-l-none rounded-r-lg"
                 >
-                  Verify
+                  Doğrula
                 </Button>
               </div>
               {spinMutation.isError && (
                 <div className="mt-2 text-red-300 text-sm">
-                  Invalid ticket code. Please check and try again.
+                  Geçersiz bilet kodu. Lütfen kontrol edip tekrar deneyin.
                 </div>
               )}
             </div>
@@ -155,7 +155,7 @@ const Home: React.FC = () => {
                   className="bg-gradient-to-r from-[#800000] to-[#5c0000] hover:from-[#a00000] hover:to-[#700000] text-white text-lg font-medium py-6 px-8 rounded-full disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                   size="lg"
                 >
-                  SPIN THE WHEEL
+                  ÇARKI ÇEVİR
                 </Button>
               </div>
             </div>
@@ -163,7 +163,7 @@ const Home: React.FC = () => {
         </main>
 
         <footer className="py-4 px-6 text-center text-white/70 text-sm">
-          &copy; {new Date().getFullYear()} Prize Wheel Game. All rights reserved.
+          &copy; {new Date().getFullYear()} Raris Çark. Tüm hakları saklıdır.
         </footer>
 
         {/* Theme Toggle Button */}
