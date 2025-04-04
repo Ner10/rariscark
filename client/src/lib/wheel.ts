@@ -27,7 +27,16 @@ export function calculateWinningRotation(
 
 // Get the segment colors in a cycling pattern
 export function getSegmentColor(index: number): string {
-  const colors = ['#F59E0B', '#10B981', '#4F46E5', '#F43F5E', '#8B5CF6', '#EC4899', '#06B6D4', '#84CC16'];
+  const colors = [
+    'bg-red-500', 
+    'bg-blue-500', 
+    'bg-yellow-500', 
+    'bg-green-500', 
+    'bg-purple-500', 
+    'bg-orange-500', 
+    'bg-pink-500', 
+    'bg-emerald-500'
+  ];
   return colors[index % colors.length];
 }
 

@@ -67,26 +67,37 @@ const Wheel: React.FC<WheelProps> = ({
   
   return (
     <div className={`relative ${className}`}>
-      <div className={`wheel-container ${sizeClasses[size]}`}>
-        <WheelPointer />
+      <div className={`wheel-container ${sizeClasses[size]} relative`}>
+        {/* Blue outer ring with gold border */}
+        <div className="absolute inset-0 rounded-full bg-blue-600 border-2 border-amber-400 shadow-xl">
+          {/* Inner golden trim */}
+          <div className="absolute inset-3 rounded-full border-2 border-amber-400"></div>
+        </div>
         
+        {/* Wheel segments container */}
         <div 
           ref={wheelRef}
-          className={`wheel rounded-full overflow-hidden border-4 border-gray-800 shadow-lg transition-transform duration-5000 ease-out`}
+          className="absolute inset-4 rounded-full overflow-hidden transition-transform duration-5000 ease-out bg-white"
           style={{ transform: `rotate(${rotation}deg)` }}
         >
+          {/* Center dot */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-blue-600 z-20"></div>
+          
+          {/* Segments */}
           {segments.map((segment, index) => (
             <WheelSegmentComponent
               key={segment.id}
               segment={segment}
               rotation={calculateSegmentRotation(segment.position, segments.length)}
               totalSegments={segments.length}
+              index={index}
             />
           ))}
         </div>
+        
+        {/* Pointer */}
+        <WheelPointer />
       </div>
-      
-
     </div>
   );
 };
