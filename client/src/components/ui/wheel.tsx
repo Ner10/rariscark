@@ -129,8 +129,10 @@ const Wheel: React.FC<WheelProps> = ({
             
             // Alternate between white and red for segment colors
             const isWhiteSegment = index % 2 === 0;
-            const segmentColor = isWhiteSegment ? '#FFFFFF' : '#B80000';
-            const textColor = isWhiteSegment ? '#B80000' : '#FFFFFF';
+            // Use a brighter red and slightly off-white to match reference image
+            const segmentColor = isWhiteSegment ? '#FFFAF0' : '#D20000';
+            // Dark red text on white segments, white text on red segments
+            const textColor = isWhiteSegment ? '#8B0000' : '#FFFFFF';
             
             return (
               <div key={segment.id} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
@@ -186,13 +188,18 @@ const Wheel: React.FC<WheelProps> = ({
                         transform: 'translate(-50%, -50%)',
                         color: textColor,
                         fontWeight: 'bold',
-                        fontSize: '16px',
+                        fontSize: '18px',
                         letterSpacing: '0.5px',
                         lineHeight: '1.1',
                         textAlign: 'center',
                         width: '80px',
-                        textShadow: isWhiteSegment ? 'none' : '1px 1px 2px rgba(0,0,0,0.5)',
-                        fontFamily: "'Arial', sans-serif"
+                        // Add text shadow only to white text for better contrast
+                        textShadow: isWhiteSegment ? 'none' : '0px 1px 2px rgba(0,0,0,0.7)',
+                        fontFamily: "'Arial', sans-serif",
+                        // Match the dollar sign style from reference image
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                       }}
                     >
                       {segment.text || "Prize"}
