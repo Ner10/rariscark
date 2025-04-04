@@ -52,22 +52,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // Admin-only register mutation for creating new admin users
   const registerMutation = useMutation({
     mutationFn: async (credentials: InsertUser) => {
       const res = await apiRequest("POST", "/api/register", credentials);
       return await res.json();
     },
     onSuccess: (user: SelectUser) => {
-      queryClient.setQueryData(["/api/user"], user);
       toast({
-        title: "Registration successful",
-        description: `Welcome, ${user.username}!`,
+        title: "User created successfully",
+        description: `New admin user "${user.username}" has been created.`,
       });
+      // Refresh user list if we implement that feature
     },
     onError: (error: Error) => {
       toast({
-        title: "Registration failed",
-        description: "Username may already be taken or the server encountered an error.",
+        title: "User creation failed",
+        description: "Username may already be taken or you don't have sufficient permissions.",
         variant: "destructive",
       });
     },

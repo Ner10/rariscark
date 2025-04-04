@@ -87,8 +87,14 @@ export function setupAuth(app: Express) {
     }
   });
 
+  // Admin-only route to create new users
   app.post("/api/register", async (req, res, next) => {
     try {
+      // Check if the user is authenticated and is an admin
+      if (!req.isAuthenticated()) {
+        return res.status(401).send("Unauthorized");
+      }
+      
       const existingUser = await storage.getUserByUsername(req.body.username);
       if (existingUser) {
         return res.status(400).send("Username already exists");
@@ -100,10 +106,8 @@ export function setupAuth(app: Express) {
         password: hashedPassword,
       });
 
-      req.login(user, (err) => {
-        if (err) return next(err);
-        res.status(201).json(user);
-      });
+      // Instead of logging in, just return the created user
+      res.status(201).json(user);
     } catch (error) {
       next(error);
     }
