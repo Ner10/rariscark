@@ -22,6 +22,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
 
 interface CreateTicketProps {
   segments: WheelSegment[];
@@ -32,11 +35,22 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
   const [selectedSegmentId, setSelectedSegmentId] = useState<string>('');
   const [ticketCount, setTicketCount] = useState<number>(1);
   const [expirationDate, setExpirationDate] = useState<string>('');
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
   // Recent tickets - show last 10
   const recentTickets = tickets.slice(0, 10);
+  
+  // Update expirationDate when calendar date changes
+  const handleDateChange = (newDate: Date | undefined) => {
+    setDate(newDate);
+    if (newDate) {
+      setExpirationDate(newDate.toISOString().split('T')[0]);
+    } else {
+      setExpirationDate('');
+    }
+  };
   
   const generateTicketsMutation = useMutation({
     mutationFn: async () => {
@@ -117,13 +131,26 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
         
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-1">Son Kullanma Tarihi (İsteğe Bağlı)</label>
-          <Input
-            type="date"
-            value={expirationDate}
-            onChange={(e) => setExpirationDate(e.target.value)}
-            min={new Date().toISOString().split('T')[0]}
-            className="w-full"
-          />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className="w-full justify-start text-left font-normal"
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date ? format(date, 'PPP') : <span className="text-muted-foreground">Tarih Seçin</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={handleDateChange}
+                disabled={(date) => date < new Date()}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
         </div>
         
         <Button 
@@ -137,24 +164,24 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ segments, tickets }) => {
         {/* Recently Generated Tickets */}
         <div className="mt-8">
           <h3 className="text-lg font-medium mb-3">Son Oluşturulan Biletler</h3>
-          <div className="border rounded overflow-hidden">
+          <div className="border rounded overflow-hidden bg-white">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Bilet Kodu</TableHead>
-                  <TableHead>Ödül</TableHead>
-                  <TableHead>Oluşturulma</TableHead>
-                  <TableHead>Durum</TableHead>
+                <TableRow className="border-b">
+                  <TableHead className="text-gray-800">Bilet Kodu</TableHead>
+                  <TableHead className="text-gray-800">Ödül</TableHead>
+                  <TableHead className="text-gray-800">Oluşturulma</TableHead>
+                  <TableHead className="text-gray-800">Durum</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {recentTickets.map((ticket) => {
                   const segment = segments.find(s => s.id === ticket.segmentId);
                   return (
-                    <TableRow key={ticket.id}>
-                      <TableCell className="font-medium">{ticket.code}</TableCell>
-                      <TableCell>{segment?.text || 'Bilinmeyen'}</TableCell>
-                      <TableCell>{format(new Date(ticket.createdAt), 'MMM d, yyyy')}</TableCell>
+                    <TableRow key={ticket.id} className="border-b">
+                      <TableCell className="font-medium text-gray-900">{ticket.code}</TableCell>
+                      <TableCell className="text-gray-800">{segment?.text || 'Bilinmeyen'}</TableCell>
+                      <TableCell className="text-gray-800">{format(new Date(ticket.createdAt), 'MMM d, yyyy')}</TableCell>
                       <TableCell>
                         {ticket.used ? (
                           <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">
