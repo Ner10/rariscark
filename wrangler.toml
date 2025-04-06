@@ -16,7 +16,7 @@ upload.format = "service-worker"
 
 [env.production]
 name = "raris-cark-prod"
-route = "*raris-cark.com/*"
+route = "*https://raris-cark.n2ngamingsolutions.workers.dev/*"
 
 [env.staging]
 name = "raris-cark-staging"
