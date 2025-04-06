@@ -1,31 +1,20 @@
 name = "raris-cark"
-type = "javascript"
-account_id = ""
 workers_dev = true
-route = ""
-zone_id = ""
 compatibility_date = "2023-09-01"
+main = "dist/index.js"
 
 [site]
-bucket = "./client/dist"
-entry-point = "server"
+bucket = "./dist/public"
 
 [build]
 command = "npm run build"
-upload.format = "service-worker"
 
 [env.production]
 name = "raris-cark-prod"
-route = "*https://raris-cark.n2ngamingsolutions.workers.dev/*"
+route = "https://raris-cark.n2ngamingsolutions.workers.dev/*"
 
 [env.staging]
 name = "raris-cark-staging"
-
-# Database bindings
-[[kv_namespaces]]
-binding = "TICKETS_STORE"
-id = ""
-preview_id = ""
 
 # Secrets that need to be set
 # - SESSION_SECRET
