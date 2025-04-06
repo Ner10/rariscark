@@ -9,12 +9,8 @@ bucket = "./dist/public"
 [build]
 command = "npm run build"
 
-[env.production]
-name = "raris-cark-prod"
-route = "https://raris-cark.n2ngamingsolutions.workers.dev/*"
-
-[env.staging]
-name = "raris-cark-staging"
+# Simplified configuration without any extra fields
+# Removed all environments to avoid any routing or KV namespace issues
 
 # Secrets that need to be set
 # - SESSION_SECRET

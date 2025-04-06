@@ -8,14 +8,5 @@
   },
   "build": {
     "command": "npm run build"
-  },
-  "env": {
-    "production": {
-      "name": "raris-cark-prod",
-      "route": "https://raris-cark.n2ngamingsolutions.workers.dev/*"
-    },
-    "staging": {
-      "name": "raris-cark-staging"
-    }
   }
 }
